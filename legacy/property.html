@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amara Estates — Bespoke Property Across Africa</title>
+<link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="nav-row">
+    <a href="property.html" class="brand">
+      <span class="word">AMARA</span>
+      <span class="sub">ESTATES · AFRICA</span>
+    </a>
+    <nav class="nav-links">
+      <a href="property.html" class="active">Property</a>
+      <a href="lifestyle.html">Lifestyle</a>
+      <a href="financial.html">Financial</a>
+      <a href="events.html">Events</a>
+    </nav>
+    <span class="reel-count">REEL 01 / 04</span>
+    <a href="#listings" class="nav-cta">View Listings</a>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="mobile-sheet">
+  <a href="property.html">Property</a>
+  <a href="lifestyle.html">Lifestyle</a>
+  <a href="financial.html">Financial</a>
+  <a href="events.html">Events</a>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" style="padding-top:0;">
+  <div class="hero-bg" data-scene="skyline"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <span class="eyebrow">Bespoke property, continent-wide</span>
+    <h1>Africa, in <em>Technicolor</em>.<br>Find home in full saturation.</h1>
+    <p class="lede">Amara curates villas, penthouses and estates across the continent — from Cape Town vineyards to Lagos skylines — with a private search led by <strong>May</strong>, our AI concierge.</p>
+    <div class="hero-actions">
+      <button class="btn primary" onclick="MayAssistant.open(); MayAssistant.greet();">Ask May to find a property</button>
+      <a href="#listings" class="btn ghost">Browse the current reel</a>
+    </div>
+  </div>
+</section>
+<div class="reel-strip"></div>
+
+<!-- ============ STATS ============ -->
+<section class="bg-teal" style="padding:0;">
+  <div class="container">
+    <div class="stat-strip">
+      <div class="stat"><div class="n">14</div><div class="l">CURRENT LISTINGS</div></div>
+      <div class="stat"><div class="n">11</div><div class="l">COUNTRIES</div></div>
+      <div class="stat"><div class="n">$2.1M</div><div class="l">TOP LISTING</div></div>
+      <div class="stat"><div class="n">24/7</div><div class="l">MAY, ON CALL</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LISTINGS ============ -->
+<section id="listings">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">The current reel</span>
+        <h2 style="margin-top:16px;">Fourteen frames, eleven countries.</h2>
+      </div>
+      <p>Every listing is vetted and shot in-context — no stock photography, no filler. Ask May to filter by budget, type or region.</p>
+    </div>
+
+    <div class="grid cols-3" id="listingGrid">
+      <!-- cards injected by pattern below -->
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY AMARA ============ -->
+<section class="bg-teal">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Why Amara</span>
+        <h2 style="margin-top:16px;">Buying property on a new continent shouldn't feel like guesswork.</h2>
+      </div>
+    </div>
+    <div class="feature reveal">
+      <div class="num">01</div>
+      <div><h4>One advisor, every border</h4><p class="ink-70">A single Amara advisor follows you from Marrakech to Nairobi — no re-explaining your brief to a new agent in every country.</p></div>
+    </div>
+    <div class="feature reveal">
+      <div class="num">02</div>
+      <div><h4>May, your AI concierge</h4><p class="ink-70">May reads your budget and lifestyle brief and matches it against live inventory across Africa in seconds, day or night.</p></div>
+    </div>
+    <div class="feature reveal">
+      <div class="num">03</div>
+      <div><h4>Financing, demystified</h4><p class="ink-70">Our mortgage calculator and financing desk translate cross-border lending into a number you can actually plan around.</p></div>
+    </div>
+    <div class="feature reveal">
+      <div class="num">04</div>
+      <div><h4>Title & transfer, handled</h4><p class="ink-70">Local legal partners in every market we operate in, so the paperwork moves as fast as the decision did.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="bg-sunset">
+  <div class="container" style="text-align:center;">
+    <span class="eyebrow" style="color:rgba(246,239,227,.85);">Ready when you are</span>
+    <h2 class="reveal" style="margin-top:18px;font-size:clamp(30px,4.4vw,54px);max-width:20ch;margin-inline:auto;">Tell May your number. She'll find the frame.</h2>
+    <div style="margin-top:32px;">
+      <button class="btn ghost" onclick="MayAssistant.open(); MayAssistant.greet();">Start a search with May</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="word">AMARA</span>
+        <p>Bespoke property, lifestyle, financing and events across the African continent. Shot in full saturation, chosen with care.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Explore</h5>
+        <a href="property.html">Property</a>
+        <a href="lifestyle.html">Lifestyle</a>
+        <a href="financial.html">Financial</a>
+        <a href="events.html">Events</a>
+      </div>
+      <div class="footer-col">
+        <h5>Regions</h5>
+        <p>Southern Africa</p>
+        <p>East Africa</p>
+        <p>West Africa</p>
+        <p>North Africa</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <p>hello@amaraestates.africa</p>
+        <p>+27 21 555 0148</p>
+        <p>Cape Town · Nairobi · Lagos</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Amara Estates. All rights reserved.</span>
+      <span>Property is illustrative demo content.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ MAY WIDGET ============ -->
+<button class="may-launcher" id="mayLauncher">
+  <span class="clap">M</span>
+  <span class="txt"><b>Ask May</b><span>Find a property in Africa</span></span>
+</button>
+<div class="may-panel" id="mayPanel">
+  <div class="may-head">
+    <div class="who"><span class="dot"></span><div><b>MAY</b><small>Amara AI Concierge</small></div></div>
+    <button id="mayClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="may-body" id="mayBody"></div>
+  <form class="may-input-row" id="mayForm">
+    <input type="text" id="mayInput" placeholder="e.g. villa in Kenya under $600k" autocomplete="off">
+    <button type="submit" aria-label="Send">➤</button>
+  </form>
+</div>
+
+<script src="main.js"></script>
+<script>
+  // Build listing cards from the shared PROPERTIES dataset
+  const sceneFor = (p) => {
+    const c = p.country;
+    if(["Nigeria","South Africa"].includes(c) && (p.type==="Penthouse"||p.type==="Apartment")) return "skyline";
+    if(p.type==="Riad") return "riad";
+    if(p.type==="Beach House") return "coast";
+    if(p.type==="Estate" && p.name.includes("Vineyard")) return "vineyard";
+    if(p.name.includes("Vineyard") || p.name.includes("Constantia")) return "vineyard";
+    if(p.country==="Egypt") return "river";
+    if(p.country==="Uganda") return "lake";
+    if(p.type==="Estate" || p.type==="Villa") return "savanna";
+    return "desert";
+  };
+  const grid = document.getElementById("listingGrid");
+  PROPERTIES.forEach((p, i)=>{
+    const card = document.createElement("div");
+    card.className = "frame-card reveal";
+    card.innerHTML = `
+      <div class="sprockets-top"></div>
+      <div class="frame-art" data-scene="${sceneFor(p)}">
+        <span class="scene-tag">SCENE ${String(i+1).padStart(2,'0')}</span>
+      </div>
+      <div class="sprockets-bottom"></div>
+      <div class="frame-body">
+        <div class="price">${fmtPrice(p.price)}</div>
+        <h3>${p.name}</h3>
+        <div class="loc">${p.city}, ${p.country}</div>
+        <div class="tags"><span>${p.type}</span><span>${p.beds} bed</span><span>${p.tag}</span></div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+  renderScenes();
+  initReveal();
+</script>
+</body>
+</html>

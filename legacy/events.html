@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events — Amara Estates</title>
+<link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<header class="site-header">
+  <div class="nav-row">
+    <a href="property.html" class="brand">
+      <span class="word">AMARA</span>
+      <span class="sub">ESTATES · AFRICA</span>
+    </a>
+    <nav class="nav-links">
+      <a href="property.html">Property</a>
+      <a href="lifestyle.html">Lifestyle</a>
+      <a href="financial.html">Financial</a>
+      <a href="events.html" class="active">Events</a>
+    </nav>
+    <span class="reel-count">REEL 04 / 04</span>
+    <a href="#calendar" class="nav-cta">See Calendar</a>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="mobile-sheet">
+  <a href="property.html">Property</a>
+  <a href="lifestyle.html">Lifestyle</a>
+  <a href="financial.html">Financial</a>
+  <a href="events.html">Events</a>
+</div>
+
+<section class="hero" style="min-height:56vh;padding-top:0;">
+  <div class="hero-bg" data-scene="lake"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <span class="eyebrow">On location, across the continent</span>
+    <h1 style="font-size:clamp(36px,5.2vw,70px);">Launches, previews<br>and the odd good party.</h1>
+    <p class="lede">Property launches, design previews and owner gatherings — RSVP through your advisor or drop your details below.</p>
+  </div>
+</section>
+<div class="reel-strip"></div>
+
+<!-- ============ CALENDAR ============ -->
+<section id="calendar">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Upcoming</span>
+        <h2 style="margin-top:16px;">The next few months, on location.</h2>
+      </div>
+      <p>Members get priority RSVP two weeks before public invites go out.</p>
+    </div>
+
+    <div class="event-card reveal">
+      <div class="event-date"><div class="d">14</div><div class="m">SEP</div></div>
+      <div>
+        <div class="event-city">Cape Town, South Africa</div>
+        <div class="event-title">Constantia Estate — Harvest Preview</div>
+        <div class="event-desc">A first look at the newly listed Constantia Wine Estate, with a tasting led by the estate's own cellar master.</div>
+      </div>
+      <a href="#" class="btn small">RSVP</a>
+    </div>
+
+    <div class="event-card reveal">
+      <div class="event-date"><div class="d">02</div><div class="m">OCT</div></div>
+      <div>
+        <div class="event-city">Lagos, Nigeria</div>
+        <div class="event-title">Lekki Lagoon Penthouse — Launch Night</div>
+        <div class="event-desc">The official opening of Amara's newest Lagos listing, with skyline views and a set from a Lagos-based DJ.</div>
+      </div>
+      <a href="#" class="btn small">RSVP</a>
+    </div>
+
+    <div class="event-card reveal">
+      <div class="event-date"><div class="d">18</div><div class="m">OCT</div></div>
+      <div>
+        <div class="event-city">Marrakech, Morocco</div>
+        <div class="event-title">Riad Restoration Walkthrough</div>
+        <div class="event-desc">Meet the ateliers behind the Marrakech Riad Amara restoration — zellige tilework, cedar carving and courtyard design.</div>
+      </div>
+      <a href="#" class="btn small">RSVP</a>
+    </div>
+
+    <div class="event-card reveal">
+      <div class="event-date"><div class="d">09</div><div class="m">NOV</div></div>
+      <div>
+        <div class="event-city">Nairobi, Kenya</div>
+        <div class="event-title">Amara Owners' Circle — East Africa</div>
+        <div class="event-desc">A seated dinner for current owners across Kenya, Tanzania, Rwanda and Uganda, hosted at Karen Acacia Estate.</div>
+      </div>
+      <a href="#" class="btn small">RSVP</a>
+    </div>
+
+    <div class="event-card reveal">
+      <div class="event-date"><div class="d">27</div><div class="m">NOV</div></div>
+      <div>
+        <div class="event-city">Accra, Ghana</div>
+        <div class="event-title">Financing Desk — Open Clinic</div>
+        <div class="event-desc">Drop-in sessions with Amara's financing team on cross-border mortgages and developer payment plans.</div>
+      </div>
+      <a href="#" class="btn small">RSVP</a>
+    </div>
+
+    <div class="event-card reveal">
+      <div class="event-date"><div class="d">12</div><div class="m">DEC</div></div>
+      <div>
+        <div class="event-city">Zanzibar, Tanzania</div>
+        <div class="event-title">Stone Town Villa — Sunset Preview</div>
+        <div class="event-desc">An evening viewing of the Zanzibar Stone Villa, timed to the sunset over Stone Town's harbour.</div>
+      </div>
+      <a href="#" class="btn small">RSVP</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOST CTA ============ -->
+<section class="bg-sunset">
+  <div class="container">
+    <div class="editorial reveal">
+      <div class="editorial-copy">
+        <span class="eyebrow" style="color:rgba(246,239,227,.85);">Private viewings</span>
+        <h2 style="color:var(--cream);">Want a listing shown to you alone, on your schedule?</h2>
+        <p style="color:rgba(246,239,227,.85);">Amara advisors arrange private walkthroughs outside the public calendar — in person or over video, anywhere on the continent.</p>
+        <div style="margin-top:20px;">
+          <button class="btn ghost" onclick="MayAssistant.open(); MayAssistant.greet();">Ask May to arrange a viewing</button>
+        </div>
+      </div>
+      <div class="editorial-art" data-scene="savanna"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="word">AMARA</span>
+        <p>Bespoke property, lifestyle, financing and events across the African continent. Shot in full saturation, chosen with care.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Explore</h5>
+        <a href="property.html">Property</a>
+        <a href="lifestyle.html">Lifestyle</a>
+        <a href="financial.html">Financial</a>
+        <a href="events.html">Events</a>
+      </div>
+      <div class="footer-col">
+        <h5>Regions</h5>
+        <p>Southern Africa</p>
+        <p>East Africa</p>
+        <p>West Africa</p>
+        <p>North Africa</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <p>hello@amaraestates.africa</p>
+        <p>+27 21 555 0148</p>
+        <p>Cape Town · Nairobi · Lagos</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Amara Estates. All rights reserved.</span>
+      <span>Event dates are illustrative demo content.</span>
+    </div>
+  </div>
+</footer>
+
+<button class="may-launcher" id="mayLauncher">
+  <span class="clap">M</span>
+  <span class="txt"><b>Ask May</b><span>Find a property in Africa</span></span>
+</button>
+<div class="may-panel" id="mayPanel">
+  <div class="may-head">
+    <div class="who"><span class="dot"></span><div><b>MAY</b><small>Amara AI Concierge</small></div></div>
+    <button id="mayClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="may-body" id="mayBody"></div>
+  <form class="may-input-row" id="mayForm">
+    <input type="text" id="mayInput" placeholder="e.g. villa in Kenya under $600k" autocomplete="off">
+    <button type="submit" aria-label="Send">➤</button>
+  </form>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

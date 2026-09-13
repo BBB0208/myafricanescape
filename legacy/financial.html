@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial — Amara Estates</title>
+<link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<header class="site-header">
+  <div class="nav-row">
+    <a href="property.html" class="brand">
+      <span class="word">AMARA</span>
+      <span class="sub">ESTATES · AFRICA</span>
+    </a>
+    <nav class="nav-links">
+      <a href="property.html">Property</a>
+      <a href="lifestyle.html">Lifestyle</a>
+      <a href="financial.html" class="active">Financial</a>
+      <a href="events.html">Events</a>
+    </nav>
+    <span class="reel-count">REEL 03 / 04</span>
+    <a href="#calculator" class="nav-cta">Open Calculator</a>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="mobile-sheet">
+  <a href="property.html">Property</a>
+  <a href="lifestyle.html">Lifestyle</a>
+  <a href="financial.html">Financial</a>
+  <a href="events.html">Events</a>
+</div>
+
+<section class="hero" style="min-height:56vh;padding-top:0;">
+  <div class="hero-bg" data-scene="desert"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <span class="eyebrow">Financing, in plain numbers</span>
+    <h1 style="font-size:clamp(36px,5.2vw,70px);">Run the <em>numbers</em><br>before you run the search.</h1>
+    <p class="lede">A straightforward mortgage calculator, tuned for cross-border buyers, plus what to expect from financing property across African markets.</p>
+  </div>
+</section>
+<div class="reel-strip"></div>
+
+<!-- ============ CALCULATOR ============ -->
+<section id="calculator">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Mortgage calculator</span>
+        <h2 style="margin-top:16px;">What would this actually cost, monthly?</h2>
+      </div>
+      <p>Adjust the price, deposit, rate and term — figures update instantly. Estimates only; your lender's offer will vary by market and profile.</p>
+    </div>
+
+    <div class="calc-wrap reveal">
+      <div class="calc-form">
+        <div class="field">
+          <label>Property price <span class="val" id="calcPriceVal">$780,000</span></label>
+          <input type="range" id="calcPrice" min="100000" max="3000000" step="10000" value="780000">
+        </div>
+        <div class="field">
+          <label>Deposit <span class="val" id="calcDepositVal">25%</span></label>
+          <input type="range" id="calcDeposit" min="5" max="60" step="1" value="25">
+        </div>
+        <div class="field">
+          <label>Interest rate (annual) <span class="val" id="calcRateVal">9.5%</span></label>
+          <input type="range" id="calcRate" min="2" max="18" step="0.1" value="9.5">
+        </div>
+        <div class="field">
+          <label>Loan term <span class="val" id="calcTermVal">20 yrs</span></label>
+          <input type="range" id="calcTerm" min="5" max="30" step="1" value="20">
+        </div>
+        <p style="font-size:13px;color:rgba(246,239,227,.5);margin-top:8px;">Rates vary widely by country — South Africa and Egypt trend lower, parts of East and West Africa trend higher. Speak to the financing desk for market-specific quotes.</p>
+      </div>
+      <div class="calc-result">
+        <div class="cap">Estimated monthly payment</div>
+        <div class="amount"><span>$</span><span id="calcMonthly">0</span></div>
+        <div class="calc-breakdown">
+          <div class="row"><span>Deposit due at purchase</span><b id="calcDepositAmount">$0</b></div>
+          <div class="row"><span>Loan amount</span><b id="calcLoanAmount">$0</b></div>
+          <div class="row"><span>Total repaid over term</span><b id="calcTotalPaid">$0</b></div>
+          <div class="row"><span>Total interest paid</span><b id="calcTotalInterest">$0</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINANCING GUIDE ============ -->
+<section class="bg-teal">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Financing routes</span>
+        <h2 style="margin-top:16px;">Three ways Amara buyers typically fund a purchase.</h2>
+      </div>
+    </div>
+    <div class="feature reveal">
+      <div class="num">01</div>
+      <div><h4>Local bank mortgage</h4><p class="ink-70">Financing through a bank in the property's own country — usually the lowest rate, but requires local income proof or a larger deposit for non-residents.</p></div>
+    </div>
+    <div class="feature reveal">
+      <div class="num">02</div>
+      <div><h4>International / offshore lending</h4><p class="ink-70">Specialist lenders who finance African property against income earned elsewhere — faster approval, typically a higher rate.</p></div>
+    </div>
+    <div class="feature reveal">
+      <div class="num">03</div>
+      <div><h4>Developer payment plans</h4><p class="ink-70">On new-build listings, staged payments tied to construction milestones — no traditional mortgage required.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FX NOTE ============ -->
+<section>
+  <div class="container">
+    <div class="editorial reveal">
+      <div class="editorial-art" data-scene="river"></div>
+      <div class="editorial-copy">
+        <span class="eyebrow">Currency & transfer</span>
+        <h2>All Amara listings are quoted in USD.</h2>
+        <p>Most cross-border buyers settle in US dollars to keep pricing comparable market to market, then convert locally at completion. Your advisor will introduce a currency partner to lock in a transfer rate ahead of closing, so a swing in the exchange rate doesn't change your final number.</p>
+        <p>Legal and transfer fees typically run 3–7% of the purchase price depending on country — your advisor provides an exact figure before you make an offer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="word">AMARA</span>
+        <p>Bespoke property, lifestyle, financing and events across the African continent. Shot in full saturation, chosen with care.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Explore</h5>
+        <a href="property.html">Property</a>
+        <a href="lifestyle.html">Lifestyle</a>
+        <a href="financial.html">Financial</a>
+        <a href="events.html">Events</a>
+      </div>
+      <div class="footer-col">
+        <h5>Regions</h5>
+        <p>Southern Africa</p>
+        <p>East Africa</p>
+        <p>West Africa</p>
+        <p>North Africa</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <p>hello@amaraestates.africa</p>
+        <p>+27 21 555 0148</p>
+        <p>Cape Town · Nairobi · Lagos</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Amara Estates. All rights reserved.</span>
+      <span>Calculator provides estimates only, not a loan offer.</span>
+    </div>
+  </div>
+</footer>
+
+<button class="may-launcher" id="mayLauncher">
+  <span class="clap">M</span>
+  <span class="txt"><b>Ask May</b><span>Find a property in Africa</span></span>
+</button>
+<div class="may-panel" id="mayPanel">
+  <div class="may-head">
+    <div class="who"><span class="dot"></span><div><b>MAY</b><small>Amara AI Concierge</small></div></div>
+    <button id="mayClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="may-body" id="mayBody"></div>
+  <form class="may-input-row" id="mayForm">
+    <input type="text" id="mayInput" placeholder="e.g. villa in Kenya under $600k" autocomplete="off">
+    <button type="submit" aria-label="Send">➤</button>
+  </form>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

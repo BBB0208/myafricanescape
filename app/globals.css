@@ -1,0 +1,279 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MY AFRICAN ESCAPE — "Panavision" design system
+   Palette: Sunset Amber / Magenta Flare / Savanna Gold /
+            Deep Teal / Cream Reel / Ink Umber
+            + header pills: Grape / Saffron / Jungle / Flame
+   ============================================================ */
+
+@theme {
+  /* ---------- palette ---------- */
+  --color-sunset: #e85d2c;
+  --color-sunset-2: #f3742e;
+  --color-magenta: #c6236f;
+  --color-magenta-2: #9e1958;
+  --color-gold: #f2b705;
+  --color-teal: #0b4f4a;
+  --color-teal-deep: #062e2b;
+  --color-teal-soft: #12655f;
+  --color-cream: #f6efe3;
+  --color-cream-2: #eee3ce;
+  --color-ink: #241608;
+
+  /* ---------- type ---------- */
+  --font-display: var(--font-fraunces), serif;
+  --font-eyebrow: var(--font-bebas-neue), sans-serif;
+  --font-body: var(--font-work-sans), sans-serif;
+  --font-pill: var(--font-anton), sans-serif;
+  --font-script: var(--font-lobster), cursive;
+
+  /* ---------- layout ---------- */
+  --container-site: 1280px;
+
+  /* the source stylesheet eases every transition with plain `ease` */
+  --default-transition-timing-function: ease;
+  --ease-panel: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-film: cubic-bezier(0.7, 0, 0.2, 1);
+  --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---------- motion: a few, deliberate, all transform/opacity ---------- */
+  --animate-marquee: marquee 70s linear infinite;
+  --animate-reel: reel 2.4s linear infinite;
+  --animate-ken-burns: ken-burns 3s var(--ease-soft) both;
+  --animate-rise: rise 0.9s var(--ease-soft) both;
+  --animate-accent: accent-sweep 2.2s ease-out 0.35s both;
+  --animate-shutter: shutter 0.7s var(--ease-film) both;
+
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+  @keyframes reel {
+    to { transform: translateX(-26px); }
+  }
+  @keyframes ken-burns {
+    from { transform: scale(1.08); }
+    to { transform: scale(1); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+  }
+  @keyframes accent-sweep {
+    from { background-position: 100% 0; }
+    to { background-position: 0 0; }
+  }
+  @keyframes shutter {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100%); }
+  }
+}
+
+/* Nav pill colours. `static` keeps every one in the CSS even though the
+   nav reads them through a variable (lib/nav.ts) rather than a class. */
+@theme static {
+  --color-grape: #a10db0;
+  --color-saffron: #ffb300;
+  --color-jungle: #2ed40c;
+  --color-flame: #ff5a1f;
+  --color-pill: #fff3d6;
+  --color-pill-cool: #cff3ee;
+}
+
+/* The two breakpoints from the source stylesheet. Tailwind's built-in
+   `max-[780px]` variant is exclusive of the boundary; these match the
+   original `@media (max-width: …)` exactly. */
+@custom-variant tablet (@media (width <= 1080px));
+@custom-variant mobile (@media (width <= 780px));
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* anchors land below the sticky header */
+    scroll-padding-top: 96px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* Preflight resets the cursor to `default` and makes buttons inherit the
+     body leading; the source relied on the browser defaults for both. */
+  button {
+    cursor: pointer;
+    line-height: normal;
+  }
+}
+
+/* Film grain — a tiled fractal-noise SVG laid over the whole page. */
+@utility bg-grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Text wordmark — gold script with a deep-green 3D drop. Stands in for the
+   logo until one is uploaded in Site settings; sized by font-size. */
+@utility wordmark {
+  font-family: var(--font-script);
+  color: #fdb913;
+  line-height: 0.84;
+  white-space: nowrap;
+  -webkit-text-stroke: 0.035em #0a3a28;
+  paint-order: stroke fill;
+  text-shadow:
+    0.02em 0.02em 0 #0a3a28,
+    0.04em 0.04em 0 #0a3a28,
+    0.06em 0.06em 0 #0a3a28,
+    0.08em 0.08em 0 #0a3a28;
+  transform: rotate(-4deg);
+}
+
+/* Sprocket holes — the perforated edge of the film-frame cards. */
+@utility sprockets {
+  height: 12px;
+  background-image: radial-gradient(
+    circle,
+    --alpha(var(--color-cream) / 55%) 2.6px,
+    transparent 2.7px
+  );
+  background-size: 20px 12px;
+  background-repeat: repeat-x;
+}
+
+/* Vertical sprocket holes — the edges of the page-change shutter. */
+@utility sprockets-y {
+  background-image: radial-gradient(
+    circle,
+    --alpha(var(--color-cream) / 55%) 3px,
+    transparent 3.1px
+  );
+  background-size: 12px 22px;
+  background-repeat: repeat-y;
+}
+
+/* The giant footer title: an outline that floods with the sunset
+   gradient on hover. */
+@utility outline-title {
+  color: transparent;
+  -webkit-text-stroke: 1px --alpha(var(--color-cream) / 22%);
+  background: linear-gradient(90deg, var(--color-sunset), var(--color-magenta), var(--color-gold))
+    no-repeat 0 0 / 0% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-size 1.2s var(--ease-film);
+
+  &:hover {
+    background-size: 100% 100%;
+  }
+}
+
+/* ============================================================
+   Scroll reveals — see components/Reveal.tsx.
+   Content is only hidden once <html class="js"> is set, so search
+   engines and no-JS visitors always get it. Each plays once.
+   ============================================================ */
+
+[data-reveal],
+[data-reveal] :is(.r-fade, .r-wipe, .r-bar, .r-curtain, .r-develop) {
+  transition-property: opacity, transform, clip-path, filter;
+  transition-duration: 0.9s;
+  transition-timing-function: var(--ease-soft);
+}
+
+[data-reveal] {
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+[data-reveal] :is(.r-fade, .r-wipe) {
+  transition-delay: var(--d, 0ms);
+}
+
+/* the resting (revealed) clip leaves room for descenders and shadows */
+[data-reveal="wipe"],
+[data-reveal] .r-wipe {
+  clip-path: inset(-12% -4% -22% -4%);
+}
+
+[data-reveal] .r-bar {
+  transform-origin: left;
+  transition-delay: 250ms;
+}
+
+[data-reveal] .r-curtain {
+  clip-path: inset(0 0 0 0 round 28px);
+  transition-duration: 1.2s;
+  transition-timing-function: var(--ease-film);
+}
+
+[data-reveal] .r-develop {
+  transition-duration: 1.6s;
+  transition-delay: calc(var(--i, 0) * 90ms + 200ms);
+}
+
+.js [data-reveal="rise"]:not([data-shown]) {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.js [data-reveal="wipe"]:not([data-shown]),
+.js [data-reveal]:not([data-shown]) .r-wipe {
+  clip-path: inset(-12% -4% 100% -4%);
+  transform: translateY(0.3em);
+}
+
+.js [data-reveal="develop"]:not([data-shown]) {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* film developing: grey and overexposed, then full colour */
+.js [data-reveal="develop"]:not([data-shown]) .r-develop {
+  filter: saturate(0) brightness(1.35) contrast(0.8);
+}
+
+.js [data-reveal]:not([data-shown]) .r-fade {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.js [data-reveal]:not([data-shown]) .r-bar {
+  transform: scaleX(0);
+}
+
+.js [data-reveal]:not([data-shown]) .r-curtain {
+  clip-path: inset(10% 50% 10% 50% round 28px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal] :is(.r-fade, .r-wipe, .r-bar, .r-curtain, .r-develop) {
+    transition: none !important;
+  }
+
+  .js [data-reveal]:not([data-shown]),
+  .js [data-reveal]:not([data-shown]) :is(.r-fade, .r-wipe, .r-bar, .r-curtain, .r-develop) {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    filter: none !important;
+  }
+}
