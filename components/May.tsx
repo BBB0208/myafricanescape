@@ -11,9 +11,11 @@ import {
   useState,
 } from "react";
 import type { FormEvent, ReactNode } from "react";
+import Price from "@/components/currency/Price";
 import { cn } from "@/lib/cn";
-import { fmtPrice } from "@/lib/properties";
 import { REGIONS } from "@/sanity/schemaTypes/options";
+import { SendHorizontal, X } from "lucide-react";
+import { ICON_STROKE } from "@/lib/icons";
 
 /* ============================================================
    MAY — the AI property concierge
@@ -411,9 +413,9 @@ export function MayProvider({
             type="button"
             aria-label="Close"
             onClick={() => setOpen(false)}
-            className="border-0 bg-transparent p-1 text-[20px] leading-none text-cream"
+            className="inline-flex border-0 bg-transparent p-1 text-cream transition-colors hover:text-gold"
           >
-            ×
+            <X size={20} strokeWidth={ICON_STROKE} aria-hidden />
           </button>
         </div>
 
@@ -459,7 +461,8 @@ export function MayProvider({
             return (
               <div key={item.id} className="mt-1 rounded-xl bg-ink p-3 text-cream">
                 <div className="font-eyebrow text-[13px] tracking-[.05em] text-gold">
-                  {fmtPrice(p.price, p.currency ?? "USD")}
+                  {/* budgets are talked about in USD; this only changes the label */}
+                  <Price amount={p.price} currency={p.currency} />
                 </div>
                 <h4 className="mt-1 mb-0.5 text-[16px]">{p.name}</h4>
                 <p className="mb-0 text-[12.5px] text-cream/65">
@@ -483,9 +486,9 @@ export function MayProvider({
           <button
             type="submit"
             aria-label="Send"
-            className="flex h-11 w-11 items-center justify-center rounded-full border-0 bg-sunset text-[16px] text-cream"
+            className="flex h-11 w-11 items-center justify-center rounded-full border-0 bg-sunset text-cream transition-colors hover:bg-magenta"
           >
-            ➤
+            <SendHorizontal size={18} strokeWidth={ICON_STROKE} aria-hidden />
           </button>
         </form>
       </div>

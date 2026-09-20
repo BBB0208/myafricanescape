@@ -2,6 +2,7 @@ import type { SchemaTypeDefinition } from "sanity";
 import { cardGrid } from "./blocks/cardGrid";
 import { ctaBanner } from "./blocks/ctaBanner";
 import { editorial } from "./blocks/editorial";
+import { episodeReel } from "./blocks/episodeReel";
 import { eventList } from "./blocks/eventList";
 import { featureList } from "./blocks/featureList";
 import { hero } from "./blocks/hero";
@@ -33,6 +34,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   cardGrid,
   mortgageCalculator,
   eventList,
+  episodeReel,
   ctaBanner,
   // objects
   link,

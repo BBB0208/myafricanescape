@@ -75,6 +75,14 @@
   --color-saffron: #ffb300;
   --color-jungle: #2ed40c;
   --color-flame: #ff5a1f;
+
+  /* The same four, deepened just far enough that white type clears WCAG AA
+     (4.5:1) on them. Used only where a pill is filled behind a label — the
+     dots on the header and in the footer keep the vivid colours above. */
+  --color-grape-deep: #a10db0;
+  --color-saffron-deep: #9a6c00;
+  --color-jungle-deep: #1d8708;
+  --color-flame-deep: #cd4819;
   --color-pill: #fff3d6;
   --color-pill-cool: #cff3ee;
 }

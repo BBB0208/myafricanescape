@@ -2,13 +2,22 @@ import type { CSSProperties } from "react";
 
 const COLORS = ["grape", "saffron", "jungle", "flame", "ink"];
 
-/* Text that reads on each pill colour (ink on the two bright ones). */
-const TEXT: Record<string, string> = {
-  grape: "var(--color-pill)",
-  saffron: "var(--color-ink)",
-  jungle: "var(--color-ink)",
-  flame: "var(--color-pill)",
-  ink: "var(--color-pill-cool)",
+/* Two shades per nav colour:
+
+   --pill       the vivid brand colour, used for the small dot beside a link
+                and for the footer's bullets — nothing sits on top of it
+   --pill-fill  the same colour deepened, used only behind a label, so the
+                white type on it clears WCAG AA at nav sizes
+   --pill-text  white, the same on every item
+
+   "ink" and "grape" are already dark enough to take white, so their two
+   shades are identical. */
+const FILL: Record<string, string> = {
+  grape: "var(--color-grape-deep)",
+  saffron: "var(--color-saffron-deep)",
+  jungle: "var(--color-jungle-deep)",
+  flame: "var(--color-flame-deep)",
+  ink: "var(--color-ink)",
 };
 
 /* CSS variables for a nav item's colour (Site settings → Navigation),
@@ -19,6 +28,10 @@ export function pillStyle(
   ground: "light" | "dark" = "light",
 ): CSSProperties {
   const name = color && COLORS.includes(color) ? color : COLORS[index % COLORS.length];
-  const fill = name === "ink" && ground === "dark" ? "var(--color-gold)" : `var(--color-${name})`;
-  return { "--pill": fill, "--pill-text": TEXT[name] } as CSSProperties;
+  const onDarkInk = name === "ink" && ground === "dark";
+  return {
+    "--pill": onDarkInk ? "var(--color-gold)" : `var(--color-${name})`,
+    "--pill-fill": onDarkInk ? "var(--color-gold)" : FILL[name],
+    "--pill-text": onDarkInk ? "var(--color-ink)" : "#ffffff",
+  } as CSSProperties;
 }

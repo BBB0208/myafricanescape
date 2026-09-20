@@ -4,9 +4,11 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import Reveal from "@/components/Reveal";
 import { cn } from "@/lib/cn";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { ICON_STROKE } from "@/lib/icons";
 
 const ARROW =
-  "border-0 bg-transparent px-3.5 pt-[10px] pb-[8px] font-pill text-[15px] leading-none tracking-[.12em] text-pill transition-colors hover:bg-ink/15";
+  "inline-flex items-center justify-center border-0 bg-transparent px-3 py-[7px] text-pill transition-colors hover:bg-ink/15 focus-visible:bg-ink/15 focus-visible:outline-none";
 
 /* A listing as a film frame. `frames` are the pre-rendered artworks
    (main artwork + gallery); the << >> pill pages through them. */
@@ -65,15 +67,16 @@ export default function ListingCard({
 
       <div className="relative px-1.5 pt-[18px] pb-1">
         {children}
+        {/* z-[2]: above the card-wide link overlay, so paging frames never navigates */}
         {count > 1 ? (
-          <div className="absolute top-3 right-0 flex overflow-hidden rounded-full bg-flame shadow-[0_6px_16px_rgba(255,90,31,.35)]">
+          <div className="absolute top-3 right-0 z-[2] flex overflow-hidden rounded-full bg-flame shadow-[0_6px_16px_rgba(255,90,31,.35)]">
             <button
               type="button"
               onClick={() => go(-1)}
               aria-label={`Previous image of ${label}`}
               className={ARROW}
             >
-              {"<<"}
+              <ChevronsLeft size={18} strokeWidth={ICON_STROKE} aria-hidden />
             </button>
             <button
               type="button"
@@ -81,7 +84,7 @@ export default function ListingCard({
               aria-label={`Next image of ${label}`}
               className={ARROW}
             >
-              {">>"}
+              <ChevronsRight size={18} strokeWidth={ICON_STROKE} aria-hidden />
             </button>
           </div>
         ) : null}

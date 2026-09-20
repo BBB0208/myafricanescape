@@ -9,34 +9,9 @@ export type { SceneName };
 
 export const pad2 = (n: number) => String(n).padStart(2, "0");
 
-/* "$1,850,000". Pass stega-clean currency codes — Intl rejects anything else. */
-export function fmtPrice(n: number, currency = "USD"): string {
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-      currencyDisplay: "narrowSymbol",
-      maximumFractionDigits: 0,
-    }).format(n);
-  } catch {
-    return "$" + n.toLocaleString("en-US");
-  }
-}
-
-/* "$2.7M" — for stat counters. */
-export function compactPrice(n: number, currency = "USD"): string {
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-      currencyDisplay: "narrowSymbol",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(n);
-  } catch {
-    return fmtPrice(n);
-  }
-}
+/* Money is never formatted here. Every figure on the page goes
+   through the display layer in lib/currency, which converts the
+   stored USD price into whatever the visitor has chosen. */
 
 /* The scene that best suits a listing, used when it has no artwork set. */
 export function sceneFor(p: {

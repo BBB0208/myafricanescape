@@ -5,6 +5,9 @@ import FooterNote, { type PageNote } from "@/components/FooterNote";
 import Logo, { type LogoData } from "@/components/Logo";
 import type { NavItem } from "@/components/SiteHeader";
 import { pillStyle } from "@/lib/nav";
+import { ArrowUp, Mail, MapPin, Phone } from "lucide-react";
+import { cn } from "@/lib/cn";
+import { ICON_STROKE } from "@/lib/icons";
 
 export type FooterData =
   | {
@@ -24,6 +27,19 @@ const COL_HEADING = "mb-5 font-pill text-[13px] font-normal uppercase tracking-[
 const COL_ITEM = "mb-2.5 block text-[14.5px] text-cream/[.72]";
 const LINK_HOVER =
   "bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_100%] bg-no-repeat transition-[background-size,color] duration-300 hover:bg-[length:100%_1px] hover:text-cream";
+
+/* The icon that suits a contact line: an address, a number, or a place. */
+function ContactIcon({ line }: { line: string }) {
+  const Glyph = line.includes("@") ? Mail : /^\+?[\d\s().-]{7,}$/.test(line.trim()) ? Phone : MapPin;
+  return (
+    <Glyph
+      size={15}
+      strokeWidth={ICON_STROKE}
+      aria-hidden
+      className="mt-[3px] shrink-0 text-gold/70"
+    />
+  );
+}
 
 /* A contact line becomes a mailto:/tel: link when it is one. */
 function contactHref(line: string): string | null {
@@ -103,9 +119,9 @@ export default function SiteFooter({
             >
               <span
                 aria-hidden
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-cream/25 text-[15px] transition-[transform,border-color] duration-300 ease-soft group-hover/top:-translate-y-1 group-hover/top:border-gold"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-cream/25 transition-[transform,border-color] duration-300 ease-soft group-hover/top:-translate-y-1 group-hover/top:border-gold"
               >
-                ↑
+                <ArrowUp size={17} strokeWidth={ICON_STROKE} aria-hidden />
               </span>
               Rewind to the top
             </a>
@@ -154,14 +170,17 @@ export default function SiteFooter({
                 {footer.contactLines.map((line, i) => {
                   const href = contactHref(line);
                   return (
-                    <li key={i} className={COL_ITEM}>
-                      {href ? (
-                        <a href={href} className={LINK_HOVER}>
-                          {line}
-                        </a>
-                      ) : (
-                        line
-                      )}
+                    <li key={i} className={cn(COL_ITEM, "flex items-start gap-2.5")}>
+                      <ContactIcon line={line} />
+                      <span>
+                        {href ? (
+                          <a href={href} className={LINK_HOVER}>
+                            {line}
+                          </a>
+                        ) : (
+                          line
+                        )}
+                      </span>
                     </li>
                   );
                 })}

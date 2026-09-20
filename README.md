@@ -51,18 +51,27 @@ app/
   (site)/layout.tsx          grain, header, footer, May, live preview, visual editing
   (site)/page.tsx            the home page chosen in Site settings
   (site)/[slug]/page.tsx     every other page
+  (site)/property/[slug]/    a listing's own page, straight from the CMS
+  (site)/error.tsx           shown if a page can't be built (e.g. CMS offline)
+  api/revalidate/            the Studio webhook: expires the listing caches
   studio/[[...tool]]/        the embedded Sanity Studio
   api/draft-mode/            enable (used by Presentation) / disable
 components/
   PageBuilder.tsx            maps page sections to blocks/*
   blocks/                    one component per section type
   May.tsx                    the concierge, fed by Sanity
+  currency/                  the display-currency picker, prices and rate note
+lib/
+  currency/                  supported currencies, FX rates, conversion, Intl formatting
+  properties/                the only place the site reads the listing inventory
 sanity/
   schemaTypes/               documents, page-builder blocks, shared objects
   lib/                       client, live (sanityFetch / SanityLive), queries, image
   presentation/resolve.ts    Presentation locations + main documents
   structure.ts               Studio desk structure (Site settings singleton)
-scripts/seed.ts              the seed content
+docs/CMS.md                  managing listings, env vars, the webhook
+scripts/seed.ts              the seed content (a one-off fixture, not a live source)
+scripts/migrate-episodes.ts  folds the Episodes page into Lifestyle (run once)
 legacy/                      the original static site, kept for reference
 ```
 
@@ -75,6 +84,23 @@ legacy/                      the original static site, kept for reference
   drafts. Without it the site still works and shows published content.
 - Deploying: add your production URL as a CORS origin (with credentials) in
   sanity.io/manage, and set the same env vars on the host.
+- **Listings live in Sanity** — adding, editing, selling or hiding one needs no
+  deploy. `lib/properties/api.ts` is the only place the site reads them from;
+  everything is cached under the `properties` and `property:<slug>` tags with a
+  10-minute life, and the Studio webhook at `/api/revalidate` expires exactly
+  what changed. Drafts and listings set to *Hidden* never reach the front end.
+  See [docs/CMS.md](docs/CMS.md).
+- Prices are stored and calculated in **USD** — listings, the concierge's budget
+  bands and every mortgage sum. The header picker is a display layer only: rates
+  are fetched once an hour on the server (free, keyless providers; override with
+  `FX_API_URL`), handed to the browser as a small table, and `Intl.NumberFormat`
+  does the formatting. The choice is kept in a `preferred_currency` cookie, read
+  during SSR so the first paint is already right. If every provider is
+  unreachable the site falls back to the last cached rates, then to USD.
+- Icons are [lucide](https://lucide.dev) (`lucide-react`), imported one at a time
+  so only what's used ships. Weight and the shared stroke live in
+  [lib/icons.ts](lib/icons.ts); icons inherit `currentColor` and are
+  `aria-hidden` inside any control that already has an `aria-label`.
 - The palette, fonts, container width and the two breakpoints live as
   `@theme` tokens in `app/globals.css`. `mobile:` and `tablet:` are custom variants
   matching the original `@media (max-width: 780px / 1080px)` rules.

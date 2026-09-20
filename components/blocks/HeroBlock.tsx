@@ -27,6 +27,8 @@ export default function HeroBlock({
         className={size.section}
         titleClassName={size.title}
         art={block.art}
+        slides={block.slides}
+        slideSeconds={block.slideSeconds}
         priority={priority}
         eyebrow={block.eyebrow}
         title={<Headline value={block.title} />}

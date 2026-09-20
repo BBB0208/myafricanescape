@@ -1,11 +1,19 @@
 "use client";
 
 import { useId, useState } from "react";
+import { useCurrency } from "@/components/currency/CurrencyProvider";
+import Price from "@/components/currency/Price";
+import RateNote from "@/components/currency/RateNote";
 import Reveal from "@/components/Reveal";
-import { fmtPrice } from "@/lib/properties";
+import { splitMoney } from "@/lib/currency/format";
 
 /* ============================================================
    Mortgage / financing calculator
+
+   Amara finances in dollars, so the sums below are done in
+   dollars — the sliders, the rate and the term are untouched by
+   whatever currency the visitor is reading in. Only the finished
+   figures are converted on their way to the screen.
    ============================================================ */
 
 const FIELD = "mb-[26px]";
@@ -34,11 +42,13 @@ export default function MortgageCalculator({
   note?: string | null;
 }) {
   const ids = useId();
+  const { display } = useCurrency();
   const [price, setPrice] = useState(String(clamp(defaults.price, 100000, 3000000, 780000)));
   const [deposit, setDeposit] = useState(String(clamp(defaults.deposit, 5, 60, 25)));
   const [rate, setRate] = useState(String(clamp(defaults.rate, 2, 18, 9.5)));
   const [term, setTerm] = useState(String(clamp(defaults.term, 5, 30, 20)));
 
+  /* ---- the loan, in USD ---- */
   const p = Number(price);
   const depositPct = Number(deposit);
   const r = Number(rate) / 100 / 12;
@@ -57,12 +67,16 @@ export default function MortgageCalculator({
     ["Total interest paid", totalInterest],
   ];
 
+  /* ---- and the same figure, in the currency being read ---- */
+  const shown = display(Number.isFinite(monthly) ? monthly : null);
+  const headline = splitMoney(shown.amount, shown.currency);
+
   return (
     <Reveal className="grid grid-cols-2 overflow-hidden rounded-[28px] bg-ink text-cream tablet:grid-cols-1">
       <div className={PANEL}>
         <div className={FIELD}>
           <label className={LABEL} htmlFor={`${ids}-price`}>
-            Property price <span className="text-gold">{fmtPrice(p)}</span>
+            Property price <Price amount={p} className="text-gold" />
           </label>
           <input
             id={`${ids}-price`}
@@ -133,9 +147,9 @@ export default function MortgageCalculator({
         <div className="mb-2 font-eyebrow text-[13px] tracking-[.1em] text-cream/85">
           {resultLabel || "Estimated monthly payment"}
         </div>
-        <div className="font-display text-[52px] font-extrabold">
-          <span className="text-[20px] font-semibold">$</span>
-          <span>{Math.round(monthly).toLocaleString("en-US")}</span>
+        <div className="font-display text-[52px] font-extrabold" suppressHydrationWarning>
+          <span className="text-[20px] font-semibold">{headline.symbol}</span>
+          <span>{headline.value}</span>
         </div>
 
         <div className="mt-7 flex flex-col gap-2.5">
@@ -145,10 +159,13 @@ export default function MortgageCalculator({
               className="flex justify-between border-t border-cream/[.28] pt-2.5 text-[14.5px]"
             >
               <span>{label}</span>
-              <b className="font-bold">{fmtPrice(Math.round(amount))}</b>
+              <Price amount={amount} className="font-bold" />
             </div>
           ))}
         </div>
+
+        {/* indicative rates, and a reminder of what the loan is actually in */}
+        <RateNote loan className="mt-5 mb-0 text-[12.5px] leading-[1.5] text-cream/75" />
       </div>
     </Reveal>
   );

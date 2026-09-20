@@ -2,12 +2,15 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import Art, { type ArtValue } from "@/components/Art";
 import Eyebrow from "@/components/Eyebrow";
+import { HeroFrames, HeroSlideControls, HeroSlides } from "@/components/HeroSlideshow";
 
 /* On arrival the artwork eases back from a slight zoom and the copy rises
    in. The headline itself is never hidden — it's the page's largest
    element, so it paints straight away. */
 export default function Hero({
   art,
+  slides,
+  slideSeconds,
   eyebrow,
   title,
   titleClassName = "text-[clamp(44px,6.4vw,92px)]",
@@ -17,6 +20,9 @@ export default function Hero({
   priority = false,
 }: {
   art: ArtValue;
+  /* extra backgrounds; with any present the hero cross-fades through them */
+  slides?: ArtValue[] | null;
+  slideSeconds?: number | null;
   eyebrow?: ReactNode;
   title: ReactNode;
   titleClassName?: string;
@@ -25,17 +31,29 @@ export default function Hero({
   className?: string;
   priority?: boolean;
 }) {
-  return (
-    <section className={cn("relative flex items-end overflow-hidden pt-0 pb-[72px] text-cream", className)}>
+  /* the main image first, then any extras — one list, rendered server-side */
+  const backgrounds = [art, ...(slides ?? [])].filter(Boolean);
+
+  const frames = backgrounds.map((frame, i) => (
+    <Art
+      key={i}
+      art={frame}
+      className="h-full w-full"
+      width={2400}
+      height={1400}
+      sizes="100vw"
+      /* only the first is the LCP image; the rest load after it */
+      priority={i === 0 ? priority : false}
+      loading={i === 0 ? undefined : "lazy"}
+    />
+  ));
+
+  const rotating = frames.length > 1;
+
+  const inner = (
+    <>
       <div className="absolute inset-0 z-0 motion-safe:animate-ken-burns">
-        <Art
-          art={art}
-          className="h-full w-full"
-          width={2400}
-          height={1400}
-          sizes="100vw"
-          priority={priority}
-        />
+        {rotating ? <HeroFrames frames={frames} /> : frames[0]}
       </div>
       <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(6,46,43,.15)_0%,rgba(6,46,43,.35)_55%,rgba(6,32,30,.92)_100%)]" />
       <div className="relative z-[2] mx-auto w-full max-w-site px-8">
@@ -58,6 +76,20 @@ export default function Hero({
           </div>
         ) : null}
       </div>
+      {/* outside the ken-burns layer, so the arrows clear the gradient */}
+      {rotating ? <HeroSlideControls /> : null}
+    </>
+  );
+
+  return (
+    <section className={cn("relative flex items-end overflow-hidden pt-[88px] pb-[72px] text-cream mobile:pt-16", className)}>
+      {rotating ? (
+        <HeroSlides count={frames.length} seconds={slideSeconds ?? 6}>
+          {inner}
+        </HeroSlides>
+      ) : (
+        inner
+      )}
     </section>
   );
 }

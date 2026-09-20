@@ -28,6 +28,7 @@ export default function Art({
   height = 900,
   sizes = "(max-width: 780px) 100vw, 50vw",
   priority = false,
+  loading,
 }: {
   art: ArtValue;
   className?: string;
@@ -36,6 +37,8 @@ export default function Art({
   height?: number;
   sizes?: string;
   priority?: boolean;
+  /* "lazy" for anything offscreen at load — e.g. a hero's later slides */
+  loading?: "eager" | "lazy";
 }) {
   const image = art?.image;
 
@@ -52,6 +55,7 @@ export default function Art({
         fill
         sizes={sizes}
         priority={priority}
+        {...(priority ? {} : { loading })}
         className="object-cover"
       />
     );

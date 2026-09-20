@@ -2,6 +2,7 @@ import { createDataAttribute } from "next-sanity";
 import CardGridBlock from "@/components/blocks/CardGridBlock";
 import CtaBannerBlock from "@/components/blocks/CtaBannerBlock";
 import EditorialBlock from "@/components/blocks/EditorialBlock";
+import EpisodeReelBlock from "@/components/blocks/EpisodeReelBlock";
 import EventListBlock from "@/components/blocks/EventListBlock";
 import FeatureListBlock from "@/components/blocks/FeatureListBlock";
 import HeroBlock from "@/components/blocks/HeroBlock";
@@ -31,6 +32,8 @@ function renderBlock(block: PageBlock, index: number) {
       return <MortgageCalculatorBlock block={block} />;
     case "eventList":
       return <EventListBlock block={block} />;
+    case "episodeReel":
+      return <EpisodeReelBlock block={block} />;
     case "ctaBanner":
       return <CtaBannerBlock block={block} />;
     default:

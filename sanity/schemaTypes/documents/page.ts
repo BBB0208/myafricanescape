@@ -10,6 +10,7 @@ export const PAGE_BLOCKS = [
   "cardGrid",
   "mortgageCalculator",
   "eventList",
+  "episodeReel",
   "ctaBanner",
 ] as const;
 
@@ -61,7 +62,7 @@ export const page = defineType({
             {
               name: "content",
               title: "Content",
-              of: ["editorial", "featureList", "cardGrid", "ctaBanner"],
+              of: ["editorial", "featureList", "cardGrid", "episodeReel", "ctaBanner"],
             },
             {
               name: "dynamic",

@@ -48,6 +48,24 @@ export const PROPERTY_TYPES = [
 
 export const CURRENCIES = ["USD", "EUR", "GBP", "ZAR", "KES", "NGN", "GHS", "MAD", "EGP"];
 
+/* Where a listing stands. "hidden" takes it off the public site without
+   deleting it, so the document (and its URL) survives. Anything else is
+   public: sold and reserved listings keep their page and their address. */
+export const LISTING_STATUSES = [
+  { title: "Available", value: "available" },
+  { title: "Reserved", value: "reserved" },
+  { title: "Sold", value: "sold" },
+  { title: "Hidden (off the public site)", value: "hidden" },
+] as const;
+
+export type ListingStatus = (typeof LISTING_STATUSES)[number]["value"];
+
+/* The short word printed on a card for anything no longer available. */
+export const STATUS_LABEL: Record<string, string> = {
+  reserved: "Reserved",
+  sold: "Sold",
+};
+
 /* Header nav pill colours (see the @theme tokens in app/globals.css). */
 export const NAV_COLORS = [
   { title: "Grape", value: "grape" },

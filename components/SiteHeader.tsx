@@ -5,11 +5,14 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { ButtonValue } from "@/components/CmsButton";
+import CurrencySelector from "@/components/currency/CurrencySelector";
 import Logo, { type LogoData } from "@/components/Logo";
 import { useMay } from "@/components/May";
 import { cn } from "@/lib/cn";
 import { isConciergeLink, resolveHref } from "@/lib/links";
 import { pillStyle } from "@/lib/nav";
+import { Menu, X } from "lucide-react";
+import { ICON_STROKE } from "@/lib/icons";
 
 export type NavItem = { key: string; label: string; href: string; color?: string | null };
 
@@ -21,14 +24,23 @@ export type PageChrome = {
 };
 
 /* A plain uppercase link with a dot in its own colour. On hover — and for
-   the current page — the dot blooms into the full pill. */
+   the current page — the dot blooms into the full pill, the label turns white
+   and re-centres itself inside it.
+
+   Resting padding is 30px / 16px to clear the dot; highlighted it is 23px
+   either side. Both total 46px, so the pill never changes width and the row
+   never reflows — only the label slides into place. */
 const NAV_LINK =
-  "relative isolate inline-flex items-center rounded-full py-[11px] pr-4 pl-[30px] font-pill text-[15px] uppercase leading-none tracking-[.06em] text-ink/80 transition-colors duration-300 " +
-  "before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-(--pill) before:transition-[clip-path] before:duration-500 before:ease-film before:[clip-path:circle(4px_at_16px_50%)] " +
-  "hover:text-(--pill-text) hover:before:[clip-path:circle(160%_at_16px_50%)] " +
-  "focus-visible:text-(--pill-text) focus-visible:outline-none focus-visible:before:[clip-path:circle(160%_at_16px_50%)] " +
-  "aria-[current=page]:text-(--pill-text) aria-[current=page]:before:[clip-path:circle(160%_at_16px_50%)] " +
-  "tablet:pr-3 tablet:text-[13px]";
+  "relative isolate inline-flex items-center rounded-full py-[11px] pl-[30px] pr-4 font-pill text-[15px] uppercase leading-none tracking-[.06em] text-ink/80 transition-[color,padding] duration-300 ease-soft " +
+  // the pill: the deepened shade, so white type always reads on it
+  "before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-(--pill-fill) before:transition-[clip-path] before:duration-500 before:ease-film before:[clip-path:circle(4px_at_16px_50%)] " +
+  // the dot: the vivid shade, sitting exactly over the collapsed pill and
+  // fading out as it blooms, so the resting header keeps its original colours
+  "after:absolute after:top-1/2 after:left-4 after:-z-10 after:h-2 after:w-2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-(--pill) after:transition-opacity after:duration-200 " +
+  "hover:px-[23px] hover:text-(--pill-text) hover:before:[clip-path:circle(160%_at_16px_50%)] hover:after:opacity-0 " +
+  "focus-visible:px-[23px] focus-visible:text-(--pill-text) focus-visible:outline-none focus-visible:before:[clip-path:circle(160%_at_16px_50%)] focus-visible:after:opacity-0 " +
+  "aria-[current=page]:px-[23px] aria-[current=page]:text-(--pill-text) aria-[current=page]:before:[clip-path:circle(160%_at_16px_50%)] aria-[current=page]:after:opacity-0 " +
+  "tablet:text-[13px]";
 
 const CTA =
   "inline-flex items-center rounded-full border-0 bg-flame px-6 pt-[12px] pb-[10px] font-pill text-[19px] uppercase leading-none tracking-[.04em] text-pill transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-sunset";
@@ -133,17 +145,17 @@ export default function SiteHeader({
           </nav>
 
           <div className="flex items-center gap-3 justify-self-end">
+            {/* display currency — prices stay quoted in USD */}
+            <CurrencySelector className="mobile:pr-2.5 mobile:pl-3 mobile:text-[12px]" />
             <div className="mobile:hidden">{ctaNode}</div>
             <button
               type="button"
               aria-label="Open menu"
               aria-expanded={sheetOpen}
               onClick={() => setSheetOpen(true)}
-              className="hidden border-0 bg-transparent p-2 mobile:block"
+              className="hidden border-0 bg-transparent p-2 text-ink transition-colors hover:text-ink/70 mobile:block"
             >
-              <span className="my-[5px] block h-0.5 w-6 bg-ink" />
-              <span className="my-[5px] block h-0.5 w-6 bg-ink" />
-              <span className="my-[5px] block h-0.5 w-6 bg-ink" />
+              <Menu size={26} strokeWidth={ICON_STROKE} aria-hidden />
             </button>
           </div>
         </div>
@@ -161,9 +173,9 @@ export default function SiteHeader({
           type="button"
           aria-label="Close menu"
           onClick={() => setSheetOpen(false)}
-          className="absolute top-6 right-6 border-0 bg-transparent p-2 text-[34px] leading-none text-cream"
+          className="absolute top-6 right-6 inline-flex border-0 bg-transparent p-2 text-cream transition-colors hover:text-gold"
         >
-          ×
+          <X size={30} strokeWidth={ICON_STROKE} aria-hidden />
         </button>
         {nav.map((link, i) => (
           <Link
@@ -176,7 +188,7 @@ export default function SiteHeader({
               transitionDelay: sheetOpen ? `${180 + i * 70}ms` : "0ms",
             }}
             className={cn(
-              "rounded-full bg-(--pill) px-7 pt-[16px] pb-[13px] font-pill text-[28px] uppercase leading-none tracking-[.04em] text-(--pill-text) transition-[transform,opacity] duration-500 ease-soft",
+              "rounded-full bg-(--pill-fill) px-7 pt-[16px] pb-[13px] font-pill text-[28px] uppercase leading-none tracking-[.04em] text-(--pill-text) transition-[transform,opacity] duration-500 ease-soft",
               sheetOpen ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0",
             )}
           >
@@ -188,6 +200,7 @@ export default function SiteHeader({
             {ctaNode}
           </div>
         ) : null}
+        <CurrencySelector tone="dark" className="mt-4" />
       </div>
     </>
   );

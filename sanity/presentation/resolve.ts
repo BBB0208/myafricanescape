@@ -13,6 +13,10 @@ export const resolve: PresentationPluginOptions["resolve"] = {
       filter: `_type == "page" && _id == *[_id == "siteSettings"][0].homePage._ref`,
     },
     {
+      route: "/property/:slug",
+      filter: `_type == "property" && slug.current == $slug`,
+    },
+    {
       route: "/:slug",
       filter: `_type == "page" && slug.current == $slug`,
     },
@@ -31,17 +35,22 @@ export const resolve: PresentationPluginOptions["resolve"] = {
           : { message: "Add a slug to preview this page.", tone: "caution" },
     }),
     property: defineLocations({
-      select: { title: "name" },
+      select: { title: "name", slug: "slug.current" },
       resolve: (doc) => ({
-        message: "Shown in every Listing grid set to “All listings”, and in May's results.",
-        locations: [{ title: `${doc?.title ?? "Listing"} on the home page`, href: "/" }],
+        message: "Also shown in every Listing grid set to “All listings”, and in May's results.",
+        locations: [
+          ...(doc?.slug
+            ? [{ title: `${doc.title ?? "Listing"} — its own page`, href: `/property/${doc.slug}` }]
+            : []),
+          { title: "The home page listing grid", href: "/" },
+        ],
       }),
     }),
     event: defineLocations({
       select: { title: "title" },
       resolve: (doc) => ({
         message: "Shown in every Event calendar section.",
-        locations: [{ title: `${doc?.title ?? "Event"} on the Episodes page`, href: "/episodes" }],
+        locations: [{ title: `${doc?.title ?? "Event"} on the Lifestyle page`, href: "/lifestyle" }],
       }),
     }),
   },

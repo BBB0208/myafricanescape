@@ -21,12 +21,20 @@ const IMAGE = /* groq */ `{ asset, crop, hotspot, alt }`;
 
 const ART = /* groq */ `{ scene, image ${IMAGE} }`;
 
+/* A listing is public unless it is hidden. Drafts never reach this filter:
+   the client reads with perspective "published". Sold and reserved listings
+   stay on the site so their addresses keep working. */
+const PUBLIC_PROPERTY = /* groq */ `_type == "property" && defined(name) && status != "hidden"`;
+
+/* Everything a listing card needs, and nothing more. */
 const PROPERTY = /* groq */ `{
   _id,
+  _updatedAt,
   name,
   "slug": slug.current,
   price,
   currency,
+  status,
   type,
   beds,
   city,
@@ -38,6 +46,34 @@ const PROPERTY = /* groq */ `{
   gallery[]{ _key, scene, image ${IMAGE} }
 }`;
 
+/* The card fields plus the write-up, for a listing's own page. */
+const PROPERTY_DETAIL = /* groq */ `{
+  _id,
+  _updatedAt,
+  name,
+  "slug": slug.current,
+  price,
+  currency,
+  status,
+  type,
+  beds,
+  baths,
+  area,
+  city,
+  country,
+  region,
+  tag,
+  badge,
+  summary,
+  description,
+  amenities,
+  art ${ART},
+  gallery[]{ _key, scene, image ${IMAGE} },
+  seo{ metaTitle, metaDescription, noIndex, ogImage },
+  "siteName": *[_id == "siteSettings"][0].title,
+  "defaultOgImage": *[_id == "siteSettings"][0].seo.ogImage
+}`;
+
 const PAGE = /* groq */ `{
   _id,
   _type,
@@ -45,15 +81,21 @@ const PAGE = /* groq */ `{
   "slug": slug.current,
   pageBuilder[]{
     ...,
-    _type == "hero" => { buttons[] ${BUTTON}, art ${ART} },
-    _type == "editorial" => { buttons[] ${BUTTON}, art ${ART} },
+    _type == "hero" => { buttons[] ${BUTTON}, art ${ART}, slides[]{ _key, scene, image ${IMAGE} } },
+    _type == "editorial" => { buttons[] ${BUTTON}, art ${ART}, views[]{ _key, label, art ${ART}, gallery[]{ _key, scene, image ${IMAGE} } } },
     _type == "ctaBanner" => { buttons[] ${BUTTON} },
     _type == "cardGrid" => { cards[]{ _key, title, body, art ${ART} } },
     _type == "listingGrid" => {
-      "listings": select(
-        source == "selected" => properties[]->${PROPERTY},
-        *[_type == "property" && defined(name)] | order(coalesce(sortOrder, 9999) asc, price desc) ${PROPERTY}
-      )
+      "selectedIds": properties[]._ref
+    },
+    _type == "episodeReel" => {
+      episodes[]{
+        _key,
+        title,
+        videoUrl,
+        "videoFile": videoFile.asset->{ url, mimeType },
+        poster ${IMAGE}
+      }
     },
     _type == "eventList" => {
       "events": *[
@@ -62,9 +104,9 @@ const PAGE = /* groq */ `{
     },
     _type == "statsBar" => {
       "live": {
-        "listingCount": count(*[_type == "property"]),
-        "countryCount": count(array::unique(*[_type == "property"].country)),
-        "topPrice": math::max(*[_type == "property"].price)
+        "listingCount": count(*[${PUBLIC_PROPERTY}]),
+        "countryCount": count(array::unique(*[${PUBLIC_PROPERTY}].country)),
+        "topPrice": math::max(*[${PUBLIC_PROPERTY}].price)
       }
     }
   }
@@ -105,6 +147,28 @@ export const SITEMAP_QUERY = defineQuery(
   }`,
 );
 
+/* ---------- listings ---------- */
+
+/* Every public listing, in display order. */
+export const PROPERTIES_QUERY = defineQuery(
+  `*[${PUBLIC_PROPERTY}] | order(coalesce(sortOrder, 9999) asc, price desc) ${PROPERTY}`,
+);
+
+/* The hand-picked subset a Listing grid names, kept in the editor's order. */
+export const PROPERTIES_BY_ID_QUERY = defineQuery(
+  `*[${PUBLIC_PROPERTY} && _id in $ids] ${PROPERTY}`,
+);
+
+/* One listing, by its web address. */
+export const PROPERTY_QUERY = defineQuery(
+  `*[${PUBLIC_PROPERTY} && slug.current == $slug][0] ${PROPERTY_DETAIL}`,
+);
+
+/* Addresses to pre-render, and to put in the sitemap. */
+export const PROPERTY_SLUGS_QUERY = defineQuery(
+  `*[${PUBLIC_PROPERTY} && defined(slug.current)]{ "slug": slug.current, _updatedAt }`,
+);
+
 /* ---------- layout: header, footer, per-page chrome ---------- */
 
 export const LAYOUT_QUERY = defineQuery(`{
@@ -139,7 +203,7 @@ export const LAYOUT_QUERY = defineQuery(`{
     headerCta ${BUTTON}
   },
   "cities": array::unique(
-    *[_type == "property" && defined(city)] | order(coalesce(sortOrder, 9999) asc).city
+    *[${PUBLIC_PROPERTY} && defined(city)] | order(coalesce(sortOrder, 9999) asc).city
   )
 }`);
 
@@ -165,8 +229,8 @@ export const CONCIERGE_QUERY = defineQuery(`{
     anywhereLabel,
     callbackMessage
   },
-  "properties": *[_type == "property" && defined(name) && defined(price)]
+  "properties": *[${PUBLIC_PROPERTY} && defined(price)]
     | order(coalesce(sortOrder, 9999) asc) {
-      _id, name, price, currency, type, beds, city, country, region, tag
+      _id, name, "slug": slug.current, price, currency, status, type, beds, city, country, region, tag
     }
 }`);

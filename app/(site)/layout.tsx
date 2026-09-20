@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { draftMode } from "next/headers";
+import { cookies, draftMode } from "next/headers";
 import { stegaClean } from "next-sanity";
 import { VisualEditing } from "next-sanity/visual-editing";
+import CurrencyProvider from "@/components/currency/CurrencyProvider";
 import DraftModeToast from "@/components/DraftModeToast";
 import JsonLd from "@/components/JsonLd";
 import type { LogoData } from "@/components/Logo";
@@ -10,12 +11,22 @@ import { MayProvider } from "@/components/May";
 import { SceneDefs } from "@/components/Scene";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader, { type NavItem, type PageChrome } from "@/components/SiteHeader";
+import { CURRENCY_COOKIE, toCurrencyCode } from "@/lib/currency/currencies";
+import { getExchangeRates } from "@/lib/currency/rates";
 import { ogImages, siteUrl } from "@/lib/seo";
-import { SanityLive, sanityFetch } from "@/sanity/lib/live";
+import { SanityLive } from "@/sanity/lib/live";
+import { safeSanityFetch } from "@/sanity/lib/safeFetch";
 import { CONCIERGE_QUERY, LAYOUT_QUERY } from "@/sanity/lib/queries";
+import type { CONCIERGE_QUERY_RESULT, LAYOUT_QUERY_RESULT } from "@/sanity/types";
+
+type LayoutData = LAYOUT_QUERY_RESULT;
+type ConciergeData = CONCIERGE_QUERY_RESULT;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { data } = await sanityFetch({ query: LAYOUT_QUERY, stega: false });
+  const { data } = await safeSanityFetch<LayoutData>(
+    { query: LAYOUT_QUERY, stega: false },
+    "layout metadata",
+  );
   const settings = data?.settings;
   const siteName = settings?.title || "My African Escape";
   const images = ogImages(settings?.seo?.ogImage);
@@ -35,12 +46,23 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SiteLayout({ children }: { children: ReactNode }) {
-  const [{ data: layout }, { data: concierge }, { isEnabled: isDraftMode }] = await Promise.all([
-    sanityFetch({ query: LAYOUT_QUERY }),
-    // May matches on these strings, so they must be free of stega markers
-    sanityFetch({ query: CONCIERGE_QUERY, stega: false }),
-    draftMode(),
-  ]);
+  /* The chrome degrades rather than failing: if the CMS is unreachable the
+     page still renders, and app/(site)/error.tsx covers a page that can't be
+     built at all. */
+  const [{ data: layout }, { data: concierge }, { isEnabled: isDraftMode }, cookieStore, rates] =
+    await Promise.all([
+      safeSanityFetch<LayoutData>({ query: LAYOUT_QUERY }, "layout"),
+      // May matches on these strings, so they must be free of stega markers
+      safeSanityFetch<ConciergeData>({ query: CONCIERGE_QUERY, stega: false }, "concierge"),
+      draftMode(),
+      cookies(),
+      // one cached fetch an hour for the whole site; never from the browser
+      getExchangeRates(),
+    ]);
+
+  // read on the server, so the first paint is already in the visitor's
+  // currency and there is nothing for the browser to correct
+  const currency = toCurrencyCode(cookieStore.get(CURRENCY_COOKIE)?.value);
 
   const settings = layout?.settings;
   const mayEnabled = settings?.conciergeEnabled === true;
@@ -122,32 +144,35 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <div className="pointer-events-none fixed inset-0 z-8999 transform-gpu shadow-[inset_0_0_18vw_rgba(6,20,18,.42)]" />
       <SceneDefs />
 
-      {/* while May is switched off, none of its copy or inventory is sent to the browser */}
-      <MayProvider
-        enabled={mayEnabled}
-        config={mayEnabled ? concierge?.config : null}
-        properties={mayEnabled ? (concierge?.properties ?? []) : []}
-      >
-        <SiteHeader
-          logo={logo}
-          line1={settings?.wordmark}
-          line2={settings?.wordmarkTagline}
-          nav={nav}
-          pages={pages}
-          cta={settings?.headerCta}
-        />
-        <main id="main">{children}</main>
-        <SiteFooter
-          logo={logo}
-          line1={settings?.wordmark}
-          line2={settings?.wordmarkTagline}
-          title={settings?.title}
-          cities={cities}
-          footer={settings?.footer}
-          nav={nav}
-          notes={pages}
-        />
-      </MayProvider>
+      {/* prices are stored in USD; this only changes what they are shown in */}
+      <CurrencyProvider initialCurrency={currency} rates={rates}>
+        {/* while May is switched off, none of its copy or inventory is sent to the browser */}
+        <MayProvider
+          enabled={mayEnabled}
+          config={mayEnabled ? concierge?.config : null}
+          properties={mayEnabled ? (concierge?.properties ?? []) : []}
+        >
+          <SiteHeader
+            logo={logo}
+            line1={settings?.wordmark}
+            line2={settings?.wordmarkTagline}
+            nav={nav}
+            pages={pages}
+            cta={settings?.headerCta}
+          />
+          <main id="main">{children}</main>
+          <SiteFooter
+            logo={logo}
+            line1={settings?.wordmark}
+            line2={settings?.wordmarkTagline}
+            title={settings?.title}
+            cities={cities}
+            footer={settings?.footer}
+            nav={nav}
+            notes={pages}
+          />
+        </MayProvider>
+      </CurrencyProvider>
 
       <SanityLive />
       {isDraftMode ? (

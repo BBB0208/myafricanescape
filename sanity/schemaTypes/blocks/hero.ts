@@ -34,9 +34,28 @@ export const hero = defineType({
     }),
     defineField({
       name: "art",
-      title: "Background artwork",
+      title: "Background image",
       type: "art",
+      description: "The first thing visitors see. Upload a photo, or pick a scene illustration.",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "slides",
+      title: "More background images",
+      type: "array",
+      description:
+        "Add more and the hero cross-fades between them, starting with the one above. Leave empty for a single still image.",
+      of: [defineArrayMember({ type: "art" })],
+      validation: (rule) => rule.max(8).warning("More than eight is a lot to load up front."),
+    }),
+    defineField({
+      name: "slideSeconds",
+      title: "Seconds per image",
+      type: "number",
+      initialValue: 6,
+      description: "How long each image holds before the next fades in.",
+      hidden: ({ parent }) => !((parent as { slides?: unknown[] })?.slides?.length),
+      validation: (rule) => rule.min(3).max(30),
     }),
     defineField({
       name: "size",

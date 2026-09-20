@@ -84,7 +84,6 @@ const PAGE_IDS = {
   home: "page-home",
   lifestyle: "page-lifestyle",
   financial: "page-financial",
-  events: "page-events",
 };
 
 /* ---------- listings ---------- */
@@ -149,6 +148,7 @@ const properties = LISTINGS.map((p, i) => {
     slug: { _type: "slug", current: slug },
     price: p.price,
     currency: "USD",
+    status: "available",
     type: p.type,
     beds: p.beds,
     city: p.city,
@@ -331,6 +331,31 @@ const lifestyle = {
         { scene: "river", title: "Financing desk", body: "Cross-border mortgages, explained simply." },
       ].map(({ scene, ...card }) => ({ _key: key(), _type: "card", ...card, art: art(scene) })),
     }),
+    section("eventList", {
+      // the old Episodes hero, now this section's own head
+      eyebrow: "On location, across the continent",
+      title: "Launches, previews and the odd good party.",
+      aside:
+        "Property launches, design previews and owner gatherings — RSVP through your advisor or drop your details below.",
+      showPast: false,
+      rsvpLabel: "RSVP",
+      emptyMessage: "New dates are being scheduled — check back soon.",
+      tone: "cream",
+      anchorId: "calendar",
+    }),
+    section("editorial", {
+      eyebrow: "Private viewings",
+      title: "Want a listing shown to you alone, on your schedule?",
+      body: [
+        block(
+          "Amara advisors arrange private walkthroughs outside the public calendar — in person or over video, anywhere on the continent.",
+        ),
+      ],
+      buttons: [button("Ask May to arrange a viewing", "ghost", toMay())],
+      art: art("savanna"),
+      artPosition: "right",
+      tone: "sunset",
+    }),
   ],
   seo: {
     _type: "seo",
@@ -407,57 +432,6 @@ const financial = {
   },
 };
 
-const eventsPage = {
-  _id: PAGE_IDS.events,
-  _type: "page",
-  title: "Episodes",
-  slug: { _type: "slug", current: "episodes" },
-  footerNote: "Event dates are illustrative demo content.",
-  pageBuilder: [
-    section("hero", {
-      eyebrow: "On location, across the continent",
-      title: [block("Launches, previews"), block("and the odd good party.")],
-      lede: [
-        block(
-          "Property launches, design previews and owner gatherings — RSVP through your advisor or drop your details below.",
-        ),
-      ],
-      art: art("lake"),
-      size: "compact",
-      showReelStrip: true,
-    }),
-    section("eventList", {
-      eyebrow: "Upcoming",
-      title: "The next few months, on location.",
-      aside: "Members get priority RSVP two weeks before public invites go out.",
-      showPast: false,
-      rsvpLabel: "RSVP",
-      emptyMessage: "New dates are being scheduled — check back soon.",
-      tone: "cream",
-      anchorId: "calendar",
-    }),
-    section("editorial", {
-      eyebrow: "Private viewings",
-      title: "Want a listing shown to you alone, on your schedule?",
-      body: [
-        block(
-          "Amara advisors arrange private walkthroughs outside the public calendar — in person or over video, anywhere on the continent.",
-        ),
-      ],
-      buttons: [button("Ask May to arrange a viewing", "ghost", toMay())],
-      art: art("savanna"),
-      artPosition: "right",
-      tone: "sunset",
-    }),
-  ],
-  seo: {
-    _type: "seo",
-    metaTitle: "Episodes",
-    metaDescription:
-      "Property launches, design previews and owner gatherings across Africa — RSVP through your Amara advisor.",
-  },
-};
-
 /* ---------- site settings ---------- */
 
 const settings = {
@@ -471,7 +445,6 @@ const settings = {
     { label: "Property", page: ref(PAGE_IDS.home), color: "grape" },
     { label: "Lifestyle", page: ref(PAGE_IDS.lifestyle), color: "saffron" },
     { label: "Invest", page: ref(PAGE_IDS.financial), color: "jungle" },
-    { label: "Episodes", page: ref(PAGE_IDS.events), color: "flame" },
   ].map((item) => ({ _key: key(), _type: "navItem", ...item })),
   // opens May, so it stays hidden until concierge.enabled is switched on
   headerCta: headerCta("Ask May", toMay()),
@@ -534,7 +507,6 @@ async function main() {
     home,
     lifestyle,
     financial,
-    eventsPage,
     ...properties,
     ...events,
   ];
@@ -543,7 +515,7 @@ async function main() {
   await tx.commit({ visibility: "sync" });
 
   console.log(
-    `Done: 1 settings, 4 pages, ${properties.length} listings, ${events.length} events (${docs.length} documents).`,
+    `Done: 1 settings, 3 pages, ${properties.length} listings, ${events.length} events (${docs.length} documents).`,
   );
 }
 

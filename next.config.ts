@@ -8,11 +8,13 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
-  // pages renamed with the 2026 redesign; keep the old URLs working
+  // pages renamed or folded together; keep the old URLs working
   async redirects() {
     return [
       { source: "/financial", destination: "/invest", permanent: false },
-      { source: "/events", destination: "/episodes", permanent: false },
+      // Episodes was folded into Lifestyle — see scripts/migrate-episodes.ts
+      { source: "/events", destination: "/lifestyle", permanent: false },
+      { source: "/episodes", destination: "/lifestyle", permanent: false },
     ];
   },
 };
