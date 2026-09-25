@@ -94,6 +94,10 @@ export default async function ListingGridBlock({ block }: { block: BlockOf<"list
                   width={800}
                   height={600}
                   sizes={FRAME_SIZES}
+                  /* the cover always fills the card, so the grid stays even;
+                     a portrait photo further in is shown whole */
+                  fit={j === 0 ? "cover" : "auto"}
+                  blur={j === 0}
                 />
               ));
               // leave room for the << >> pill beside the price

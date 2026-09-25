@@ -60,6 +60,13 @@ async function main() {
   }
 
   const blocks = episodes.pageBuilder ?? [];
+
+  /* Episodes became a page of its own again, around the trailer —
+     folding it away would delete that */
+  if (blocks.some((b) => b._type === "episodeReel")) {
+    console.log("The Episodes page has its own Episode reel — it stays a page. Nothing to do.");
+    return;
+  }
   const hero = blocks.find((b) => b._type === "hero");
   const rest = blocks.filter((b) => b._type !== "hero");
   if (!rest.length) throw new Error("The Episodes page has nothing but a hero — stopping.");

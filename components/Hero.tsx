@@ -44,6 +44,7 @@ export default function Hero({
       sizes="100vw"
       /* only the first is the LCP image; the rest load after it */
       priority={i === 0 ? priority : false}
+      blur={i === 0}
       loading={i === 0 ? undefined : "lazy"}
     />
   ));
@@ -56,6 +57,8 @@ export default function Hero({
         {rotating ? <HeroFrames frames={frames} /> : frames[0]}
       </div>
       <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(6,46,43,.15)_0%,rgba(6,46,43,.35)_55%,rgba(6,32,30,.92)_100%)]" />
+      {/* a soft shade behind the copy, so the headline holds over a busy photo */}
+      <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(6,32,30,.55)_0%,rgba(6,32,30,.25)_40%,rgba(6,32,30,0)_65%)] mobile:bg-[linear-gradient(90deg,rgba(6,32,30,.35)_0%,rgba(6,32,30,.35)_100%)]" />
       <div className="relative z-[2] mx-auto w-full max-w-site px-8">
         {eyebrow ? (
           <Eyebrow tone="gold" className="motion-safe:animate-rise">

@@ -5,13 +5,15 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { ICON_STROKE } from "@/lib/icons";
+import { useAfterLoad, useFrameWindow } from "@/components/useFrameWindow";
 
 /* ============================================================
    The hero's background, cross-dissolving between images.
 
    Every frame is rendered by the server, so the first one is the
    LCP image exactly as it was before — the rotation is only an
-   opacity change on top of markup that is already there.
+   opacity change. Only the slide on show and its neighbours are
+   mounted, so the later slides never compete with the first.
 
    The frames sit inside the ken-burns layer, which is its own
    stacking context; the << >> pill has to live outside it to
@@ -93,23 +95,28 @@ export function HeroSlides({
 /* The pictures themselves, inside the ken-burns layer. */
 export function HeroFrames({ frames }: { frames: ReactNode[] }) {
   const { index, count } = useContext(SlidesContext);
+  /* the first slide alone until the page has loaded, then its neighbours —
+     so the later slides never compete with the first paint */
+  const mounted = useFrameWindow(index, count, useAfterLoad());
 
   return (
     <>
-      {frames.map((frame, i) => (
-        <div
-          key={i}
-          /* the frames are one picture as far as a reader is concerned */
-          aria-hidden={count > 1 ? i !== index : undefined}
-          style={{ transitionDuration: `${FADE_MS}ms` }}
-          className={cn(
-            "absolute inset-0 transition-opacity ease-soft",
-            i === index ? "opacity-100" : "opacity-0",
-          )}
-        >
-          {frame}
-        </div>
-      ))}
+      {frames.map((frame, i) =>
+        mounted(i) ? (
+          <div
+            key={i}
+            /* the frames are one picture as far as a reader is concerned */
+            aria-hidden={count > 1 ? i !== index : undefined}
+            style={{ transitionDuration: `${FADE_MS}ms` }}
+            className={cn(
+              "absolute inset-0 transition-opacity ease-soft",
+              i === index ? "opacity-100" : "opacity-0",
+            )}
+          >
+            {frame}
+          </div>
+        ) : null,
+      )}
     </>
   );
 }

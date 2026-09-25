@@ -13,7 +13,9 @@ import { ICON_STROKE } from "@/lib/icons";
    The labels and the pictures sit in different columns of the
    grid, so the selection lives in a context wrapped around both.
    Every picture is rendered by the server and cross-dissolved on
-   selection — nothing is fetched when a label or an arrow is used.
+   selection. Each label's first picture, and the neighbours of the
+   one on show, are already loaded — so neither a label nor an arrow
+   ever waits on the network.
 
    The labels follow the WAI-ARIA tabs pattern: arrow keys move
    between them, Home and End jump to the ends, and only the
@@ -72,8 +74,8 @@ const ARROW =
   // a roomier target for thumbs
   "mobile:px-3.5 mobile:py-[11px]";
 
-/* The picture. Every frame of every label is already in the markup;
-   selecting one only changes which is opaque. */
+/* The picture. Every frame is rendered by the server; selecting one
+   only changes which is opaque. */
 export function ViewArt({ groups }: { groups: ReactNode[][] }) {
   const { index: view, panelId, tabId, labels } = useViews();
   const [frame, setFrame] = useState(0);
@@ -91,6 +93,17 @@ export function ViewArt({ groups }: { groups: ReactNode[][] }) {
   const go = (step: number) => setFrame((f) => (f + step + count) % count);
   const label = labels[view] ?? "this selection";
 
+  /* each label's first picture is always there, so switching label is
+     instant; within a label, only the picture on show, its neighbours
+     and the ones already visited are mounted */
+  const [seen, setSeen] = useState<ReadonlySet<string>>(() => new Set());
+  const shown = `${view}-${at}`;
+  if (!seen.has(shown)) setSeen(new Set(seen).add(shown));
+  const mounted = (v: number, f: number) =>
+    f === 0 ||
+    seen.has(`${v}-${f}`) ||
+    (v === view && count > 1 && (f === (at + 1) % count || f === (at - 1 + count) % count));
+
   return (
     <div
       id={panelId}
@@ -99,18 +112,20 @@ export function ViewArt({ groups }: { groups: ReactNode[][] }) {
       className="r-curtain relative aspect-[5/4] overflow-hidden rounded-[28px]"
     >
       {groups.map((frames, v) =>
-        frames.map((node, f) => (
-          <div
-            key={`${v}-${f}`}
-            aria-hidden={!(v === view && f === at)}
-            className={cn(
-              "absolute inset-0 transition-opacity duration-500 ease-soft",
-              v === view && f === at ? "opacity-100" : "opacity-0",
-            )}
-          >
-            {node}
-          </div>
-        )),
+        frames.map((node, f) =>
+          mounted(v, f) ? (
+            <div
+              key={`${v}-${f}`}
+              aria-hidden={!(v === view && f === at)}
+              className={cn(
+                "absolute inset-0 transition-opacity duration-500 ease-soft",
+                v === view && f === at ? "opacity-100" : "opacity-0",
+              )}
+            >
+              {node}
+            </div>
+          ) : null,
+        ),
       )}
 
       {count > 1 ? (

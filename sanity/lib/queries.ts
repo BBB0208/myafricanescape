@@ -17,7 +17,8 @@ const LINK = /* groq */ `{
 
 const BUTTON = /* groq */ `{ _key, label, variant, link ${LINK} }`;
 
-const IMAGE = /* groq */ `{ asset, crop, hotspot, alt }`;
+/* lqip: Sanity's tiny blurred preview, painted while the photo loads */
+const IMAGE = /* groq */ `{ asset, crop, hotspot, alt, "lqip": asset->metadata.lqip }`;
 
 const ART = /* groq */ `{ scene, image ${IMAGE} }`;
 

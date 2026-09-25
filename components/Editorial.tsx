@@ -29,7 +29,7 @@ export function Editorial({
 export function EditorialArt({ art }: { art: ArtValue }) {
   return (
     <div className="r-curtain relative aspect-[5/4] overflow-hidden rounded-[28px]">
-      <Art art={art} className="absolute inset-0 h-full w-full" width={1000} height={800} />
+      <Art art={art} className="absolute inset-0 h-full w-full" width={1000} height={800} fit="auto" blur />
     </div>
   );
 }

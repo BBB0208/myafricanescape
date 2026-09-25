@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { preconnect } from "react-dom";
 import { cookies, draftMode } from "next/headers";
 import { stegaClean } from "next-sanity";
 import { VisualEditing } from "next-sanity/visual-editing";
@@ -46,6 +47,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SiteLayout({ children }: { children: ReactNode }) {
+  /* every photo comes from Sanity's image CDN — open that connection
+     while the HTML is still arriving */
+  preconnect("https://cdn.sanity.io");
+
   /* The chrome degrades rather than failing: if the CMS is unreachable the
      page still renders, and app/(site)/error.tsx covers a page that can't be
      built at all. */

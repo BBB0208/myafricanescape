@@ -657,7 +657,7 @@ export type AllSanitySchemaTypes =
 
 // Source: sanity/lib/queries.ts
 // Variable: HOME_PAGE_QUERY
-// Query: *[_type == "page" && _id == *[_id == "siteSettings"][0].homePage._ref][0]{  _id,  _type,  title,  "slug": slug.current,  pageBuilder[]{    ...,    _type == "hero" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }, art { scene, image { asset, crop, hotspot, alt } }, slides[]{ _key, scene, image { asset, crop, hotspot, alt } } },    _type == "editorial" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }, art { scene, image { asset, crop, hotspot, alt } }, views[]{ _key, label, art { scene, image { asset, crop, hotspot, alt } }, gallery[]{ _key, scene, image { asset, crop, hotspot, alt } } } },    _type == "ctaBanner" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} } },    _type == "cardGrid" => { cards[]{ _key, title, body, art { scene, image { asset, crop, hotspot, alt } } } },    _type == "listingGrid" => {      "selectedIds": properties[]._ref    },    _type == "episodeReel" => {      episodes[]{        _key,        title,        videoUrl,        "videoFile": videoFile.asset->{ url, mimeType },        poster { asset, crop, hotspot, alt }      }    },    _type == "eventList" => {      "events": *[        _type == "event" && defined(date) && (^.showPast == true || date >= $today)      ] | order(date asc) { _id, title, date, city, description, rsvp {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }    },    _type == "statsBar" => {      "live": {        "listingCount": count(*[_type == "property" && defined(name) && status != "hidden"]),        "countryCount": count(array::unique(*[_type == "property" && defined(name) && status != "hidden"].country)),        "topPrice": math::max(*[_type == "property" && defined(name) && status != "hidden"].price)      }    }  }}
+// Query: *[_type == "page" && _id == *[_id == "siteSettings"][0].homePage._ref][0]{  _id,  _type,  title,  "slug": slug.current,  pageBuilder[]{    ...,    _type == "hero" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, slides[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } },    _type == "editorial" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, views[]{ _key, label, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } } },    _type == "ctaBanner" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} } },    _type == "cardGrid" => { cards[]{ _key, title, body, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } } },    _type == "listingGrid" => {      "selectedIds": properties[]._ref    },    _type == "episodeReel" => {      episodes[]{        _key,        title,        videoUrl,        "videoFile": videoFile.asset->{ url, mimeType },        poster { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip }      }    },    _type == "eventList" => {      "events": *[        _type == "event" && defined(date) && (^.showPast == true || date >= $today)      ] | order(date asc) { _id, title, date, city, description, rsvp {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }    },    _type == "statsBar" => {      "live": {        "listingCount": count(*[_type == "property" && defined(name) && status != "hidden"]),        "countryCount": count(array::unique(*[_type == "property" && defined(name) && status != "hidden"].country)),        "topPrice": math::max(*[_type == "property" && defined(name) && status != "hidden"].price)      }    }  }}
 export type HOME_PAGE_QUERY_RESULT = {
   _id: string;
   _type: "page";
@@ -688,6 +688,7 @@ export type HOME_PAGE_QUERY_RESULT = {
               crop: SanityImageCrop | null;
               hotspot: SanityImageHotspot | null;
               alt: string | null;
+              lqip: string | null;
             } | null;
           } | null;
         }> | null;
@@ -742,6 +743,7 @@ export type HOME_PAGE_QUERY_RESULT = {
               crop: SanityImageCrop | null;
               hotspot: SanityImageHotspot | null;
               alt: string | null;
+              lqip: string | null;
             } | null;
           };
           gallery: Array<{
@@ -760,6 +762,7 @@ export type HOME_PAGE_QUERY_RESULT = {
               crop: SanityImageCrop | null;
               hotspot: SanityImageHotspot | null;
               alt: string | null;
+              lqip: string | null;
             } | null;
           }> | null;
         }> | null;
@@ -790,6 +793,7 @@ export type HOME_PAGE_QUERY_RESULT = {
             crop: SanityImageCrop | null;
             hotspot: SanityImageHotspot | null;
             alt: string | null;
+            lqip: string | null;
           } | null;
         };
         artPosition?: "left" | "none" | "right";
@@ -816,6 +820,7 @@ export type HOME_PAGE_QUERY_RESULT = {
             crop: SanityImageCrop | null;
             hotspot: SanityImageHotspot | null;
             alt: string | null;
+            lqip: string | null;
           } | null;
         }>;
         autoplay?: boolean;
@@ -900,6 +905,7 @@ export type HOME_PAGE_QUERY_RESULT = {
             crop: SanityImageCrop | null;
             hotspot: SanityImageHotspot | null;
             alt: string | null;
+            lqip: string | null;
           } | null;
         };
         slides: Array<{
@@ -918,6 +924,7 @@ export type HOME_PAGE_QUERY_RESULT = {
             crop: SanityImageCrop | null;
             hotspot: SanityImageHotspot | null;
             alt: string | null;
+            lqip: string | null;
           } | null;
         }> | null;
         slideSeconds?: number;
@@ -982,7 +989,7 @@ export type HOME_PAGE_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  "slug": slug.current,  pageBuilder[]{    ...,    _type == "hero" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }, art { scene, image { asset, crop, hotspot, alt } }, slides[]{ _key, scene, image { asset, crop, hotspot, alt } } },    _type == "editorial" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }, art { scene, image { asset, crop, hotspot, alt } }, views[]{ _key, label, art { scene, image { asset, crop, hotspot, alt } }, gallery[]{ _key, scene, image { asset, crop, hotspot, alt } } } },    _type == "ctaBanner" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} } },    _type == "cardGrid" => { cards[]{ _key, title, body, art { scene, image { asset, crop, hotspot, alt } } } },    _type == "listingGrid" => {      "selectedIds": properties[]._ref    },    _type == "episodeReel" => {      episodes[]{        _key,        title,        videoUrl,        "videoFile": videoFile.asset->{ url, mimeType },        poster { asset, crop, hotspot, alt }      }    },    _type == "eventList" => {      "events": *[        _type == "event" && defined(date) && (^.showPast == true || date >= $today)      ] | order(date asc) { _id, title, date, city, description, rsvp {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }    },    _type == "statsBar" => {      "live": {        "listingCount": count(*[_type == "property" && defined(name) && status != "hidden"]),        "countryCount": count(array::unique(*[_type == "property" && defined(name) && status != "hidden"].country)),        "topPrice": math::max(*[_type == "property" && defined(name) && status != "hidden"].price)      }    }  }}
+// Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  title,  "slug": slug.current,  pageBuilder[]{    ...,    _type == "hero" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, slides[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } },    _type == "editorial" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, views[]{ _key, label, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } } },    _type == "ctaBanner" => { buttons[] { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} } },    _type == "cardGrid" => { cards[]{ _key, title, body, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } } },    _type == "listingGrid" => {      "selectedIds": properties[]._ref    },    _type == "episodeReel" => {      episodes[]{        _key,        title,        videoUrl,        "videoFile": videoFile.asset->{ url, mimeType },        poster { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip }      }    },    _type == "eventList" => {      "events": *[        _type == "event" && defined(date) && (^.showPast == true || date >= $today)      ] | order(date asc) { _id, title, date, city, description, rsvp {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }    },    _type == "statsBar" => {      "live": {        "listingCount": count(*[_type == "property" && defined(name) && status != "hidden"]),        "countryCount": count(array::unique(*[_type == "property" && defined(name) && status != "hidden"].country)),        "topPrice": math::max(*[_type == "property" && defined(name) && status != "hidden"].price)      }    }  }}
 export type PAGE_QUERY_RESULT = {
   _id: string;
   _type: "page";
@@ -1013,6 +1020,7 @@ export type PAGE_QUERY_RESULT = {
               crop: SanityImageCrop | null;
               hotspot: SanityImageHotspot | null;
               alt: string | null;
+              lqip: string | null;
             } | null;
           } | null;
         }> | null;
@@ -1067,6 +1075,7 @@ export type PAGE_QUERY_RESULT = {
               crop: SanityImageCrop | null;
               hotspot: SanityImageHotspot | null;
               alt: string | null;
+              lqip: string | null;
             } | null;
           };
           gallery: Array<{
@@ -1085,6 +1094,7 @@ export type PAGE_QUERY_RESULT = {
               crop: SanityImageCrop | null;
               hotspot: SanityImageHotspot | null;
               alt: string | null;
+              lqip: string | null;
             } | null;
           }> | null;
         }> | null;
@@ -1115,6 +1125,7 @@ export type PAGE_QUERY_RESULT = {
             crop: SanityImageCrop | null;
             hotspot: SanityImageHotspot | null;
             alt: string | null;
+            lqip: string | null;
           } | null;
         };
         artPosition?: "left" | "none" | "right";
@@ -1141,6 +1152,7 @@ export type PAGE_QUERY_RESULT = {
             crop: SanityImageCrop | null;
             hotspot: SanityImageHotspot | null;
             alt: string | null;
+            lqip: string | null;
           } | null;
         }>;
         autoplay?: boolean;
@@ -1225,6 +1237,7 @@ export type PAGE_QUERY_RESULT = {
             crop: SanityImageCrop | null;
             hotspot: SanityImageHotspot | null;
             alt: string | null;
+            lqip: string | null;
           } | null;
         };
         slides: Array<{
@@ -1243,6 +1256,7 @@ export type PAGE_QUERY_RESULT = {
             crop: SanityImageCrop | null;
             hotspot: SanityImageHotspot | null;
             alt: string | null;
+            lqip: string | null;
           } | null;
         }> | null;
         slideSeconds?: number;
@@ -1381,7 +1395,7 @@ export type SITEMAP_QUERY_RESULT = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: PROPERTIES_QUERY
-// Query: *[_type == "property" && defined(name) && status != "hidden"] | order(coalesce(sortOrder, 9999) asc, price desc) {  _id,  _updatedAt,  name,  "slug": slug.current,  price,  currency,  status,  type,  beds,  city,  country,  region,  tag,  badge,  art { scene, image { asset, crop, hotspot, alt } },  gallery[]{ _key, scene, image { asset, crop, hotspot, alt } }}
+// Query: *[_type == "property" && defined(name) && status != "hidden"] | order(coalesce(sortOrder, 9999) asc, price desc) {  _id,  _updatedAt,  name,  "slug": slug.current,  price,  currency,  status,  type,  beds,  city,  country,  region,  tag,  badge,  art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },  gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }}
 export type PROPERTIES_QUERY_RESULT = Array<{
   _id: string;
   _updatedAt: string;
@@ -1425,6 +1439,7 @@ export type PROPERTIES_QUERY_RESULT = Array<{
       crop: SanityImageCrop | null;
       hotspot: SanityImageHotspot | null;
       alt: string | null;
+      lqip: string | null;
     } | null;
   } | null;
   gallery: Array<{
@@ -1443,13 +1458,14 @@ export type PROPERTIES_QUERY_RESULT = Array<{
       crop: SanityImageCrop | null;
       hotspot: SanityImageHotspot | null;
       alt: string | null;
+      lqip: string | null;
     } | null;
   }> | null;
 }>;
 
 // Source: sanity/lib/queries.ts
 // Variable: PROPERTIES_BY_ID_QUERY
-// Query: *[_type == "property" && defined(name) && status != "hidden" && _id in $ids] {  _id,  _updatedAt,  name,  "slug": slug.current,  price,  currency,  status,  type,  beds,  city,  country,  region,  tag,  badge,  art { scene, image { asset, crop, hotspot, alt } },  gallery[]{ _key, scene, image { asset, crop, hotspot, alt } }}
+// Query: *[_type == "property" && defined(name) && status != "hidden" && _id in $ids] {  _id,  _updatedAt,  name,  "slug": slug.current,  price,  currency,  status,  type,  beds,  city,  country,  region,  tag,  badge,  art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },  gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }}
 export type PROPERTIES_BY_ID_QUERY_RESULT = Array<{
   _id: string;
   _updatedAt: string;
@@ -1493,6 +1509,7 @@ export type PROPERTIES_BY_ID_QUERY_RESULT = Array<{
       crop: SanityImageCrop | null;
       hotspot: SanityImageHotspot | null;
       alt: string | null;
+      lqip: string | null;
     } | null;
   } | null;
   gallery: Array<{
@@ -1511,13 +1528,14 @@ export type PROPERTIES_BY_ID_QUERY_RESULT = Array<{
       crop: SanityImageCrop | null;
       hotspot: SanityImageHotspot | null;
       alt: string | null;
+      lqip: string | null;
     } | null;
   }> | null;
 }>;
 
 // Source: sanity/lib/queries.ts
 // Variable: PROPERTY_QUERY
-// Query: *[_type == "property" && defined(name) && status != "hidden" && slug.current == $slug][0] {  _id,  _updatedAt,  name,  "slug": slug.current,  price,  currency,  status,  type,  beds,  baths,  area,  city,  country,  region,  tag,  badge,  summary,  description,  amenities,  art { scene, image { asset, crop, hotspot, alt } },  gallery[]{ _key, scene, image { asset, crop, hotspot, alt } },  seo{ metaTitle, metaDescription, noIndex, ogImage },  "siteName": *[_id == "siteSettings"][0].title,  "defaultOgImage": *[_id == "siteSettings"][0].seo.ogImage}
+// Query: *[_type == "property" && defined(name) && status != "hidden" && slug.current == $slug][0] {  _id,  _updatedAt,  name,  "slug": slug.current,  price,  currency,  status,  type,  beds,  baths,  area,  city,  country,  region,  tag,  badge,  summary,  description,  amenities,  art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },  gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },  seo{ metaTitle, metaDescription, noIndex, ogImage },  "siteName": *[_id == "siteSettings"][0].title,  "defaultOgImage": *[_id == "siteSettings"][0].seo.ogImage}
 export type PROPERTY_QUERY_RESULT = {
   _id: string;
   _updatedAt: string;
@@ -1566,6 +1584,7 @@ export type PROPERTY_QUERY_RESULT = {
       crop: SanityImageCrop | null;
       hotspot: SanityImageHotspot | null;
       alt: string | null;
+      lqip: string | null;
     } | null;
   } | null;
   gallery: Array<{
@@ -1584,6 +1603,7 @@ export type PROPERTY_QUERY_RESULT = {
       crop: SanityImageCrop | null;
       hotspot: SanityImageHotspot | null;
       alt: string | null;
+      lqip: string | null;
     } | null;
   }> | null;
   seo: {
@@ -1847,16 +1867,16 @@ export type CONCIERGE_QUERY_RESULT = {
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '*[_type == "page" && _id == *[_id == "siteSettings"][0].homePage._ref][0]{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  pageBuilder[]{\n    ...,\n    _type == "hero" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }, art { scene, image { asset, crop, hotspot, alt } }, slides[]{ _key, scene, image { asset, crop, hotspot, alt } } },\n    _type == "editorial" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }, art { scene, image { asset, crop, hotspot, alt } }, views[]{ _key, label, art { scene, image { asset, crop, hotspot, alt } }, gallery[]{ _key, scene, image { asset, crop, hotspot, alt } } } },\n    _type == "ctaBanner" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} } },\n    _type == "cardGrid" => { cards[]{ _key, title, body, art { scene, image { asset, crop, hotspot, alt } } } },\n    _type == "listingGrid" => {\n      "selectedIds": properties[]._ref\n    },\n    _type == "episodeReel" => {\n      episodes[]{\n        _key,\n        title,\n        videoUrl,\n        "videoFile": videoFile.asset->{ url, mimeType },\n        poster { asset, crop, hotspot, alt }\n      }\n    },\n    _type == "eventList" => {\n      "events": *[\n        _type == "event" && defined(date) && (^.showPast == true || date >= $today)\n      ] | order(date asc) { _id, title, date, city, description, rsvp {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }\n    },\n    _type == "statsBar" => {\n      "live": {\n        "listingCount": count(*[_type == "property" && defined(name) && status != "hidden"]),\n        "countryCount": count(array::unique(*[_type == "property" && defined(name) && status != "hidden"].country)),\n        "topPrice": math::max(*[_type == "property" && defined(name) && status != "hidden"].price)\n      }\n    }\n  }\n}': HOME_PAGE_QUERY_RESULT;
-    '*[_type == "page" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  pageBuilder[]{\n    ...,\n    _type == "hero" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }, art { scene, image { asset, crop, hotspot, alt } }, slides[]{ _key, scene, image { asset, crop, hotspot, alt } } },\n    _type == "editorial" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }, art { scene, image { asset, crop, hotspot, alt } }, views[]{ _key, label, art { scene, image { asset, crop, hotspot, alt } }, gallery[]{ _key, scene, image { asset, crop, hotspot, alt } } } },\n    _type == "ctaBanner" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} } },\n    _type == "cardGrid" => { cards[]{ _key, title, body, art { scene, image { asset, crop, hotspot, alt } } } },\n    _type == "listingGrid" => {\n      "selectedIds": properties[]._ref\n    },\n    _type == "episodeReel" => {\n      episodes[]{\n        _key,\n        title,\n        videoUrl,\n        "videoFile": videoFile.asset->{ url, mimeType },\n        poster { asset, crop, hotspot, alt }\n      }\n    },\n    _type == "eventList" => {\n      "events": *[\n        _type == "event" && defined(date) && (^.showPast == true || date >= $today)\n      ] | order(date asc) { _id, title, date, city, description, rsvp {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }\n    },\n    _type == "statsBar" => {\n      "live": {\n        "listingCount": count(*[_type == "property" && defined(name) && status != "hidden"]),\n        "countryCount": count(array::unique(*[_type == "property" && defined(name) && status != "hidden"].country)),\n        "topPrice": math::max(*[_type == "property" && defined(name) && status != "hidden"].price)\n      }\n    }\n  }\n}': PAGE_QUERY_RESULT;
+    '*[_type == "page" && _id == *[_id == "siteSettings"][0].homePage._ref][0]{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  pageBuilder[]{\n    ...,\n    _type == "hero" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, slides[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } },\n    _type == "editorial" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, views[]{ _key, label, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } } },\n    _type == "ctaBanner" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} } },\n    _type == "cardGrid" => { cards[]{ _key, title, body, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } } },\n    _type == "listingGrid" => {\n      "selectedIds": properties[]._ref\n    },\n    _type == "episodeReel" => {\n      episodes[]{\n        _key,\n        title,\n        videoUrl,\n        "videoFile": videoFile.asset->{ url, mimeType },\n        poster { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip }\n      }\n    },\n    _type == "eventList" => {\n      "events": *[\n        _type == "event" && defined(date) && (^.showPast == true || date >= $today)\n      ] | order(date asc) { _id, title, date, city, description, rsvp {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }\n    },\n    _type == "statsBar" => {\n      "live": {\n        "listingCount": count(*[_type == "property" && defined(name) && status != "hidden"]),\n        "countryCount": count(array::unique(*[_type == "property" && defined(name) && status != "hidden"].country)),\n        "topPrice": math::max(*[_type == "property" && defined(name) && status != "hidden"].price)\n      }\n    }\n  }\n}': HOME_PAGE_QUERY_RESULT;
+    '*[_type == "page" && slug.current == $slug][0]{\n  _id,\n  _type,\n  title,\n  "slug": slug.current,\n  pageBuilder[]{\n    ...,\n    _type == "hero" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, slides[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } },\n    _type == "editorial" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, views[]{ _key, label, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }, gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } } },\n    _type == "ctaBanner" => { buttons[] { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} } },\n    _type == "cardGrid" => { cards[]{ _key, title, body, art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } } } },\n    _type == "listingGrid" => {\n      "selectedIds": properties[]._ref\n    },\n    _type == "episodeReel" => {\n      episodes[]{\n        _key,\n        title,\n        videoUrl,\n        "videoFile": videoFile.asset->{ url, mimeType },\n        poster { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip }\n      }\n    },\n    _type == "eventList" => {\n      "events": *[\n        _type == "event" && defined(date) && (^.showPast == true || date >= $today)\n      ] | order(date asc) { _id, title, date, city, description, rsvp {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }\n    },\n    _type == "statsBar" => {\n      "live": {\n        "listingCount": count(*[_type == "property" && defined(name) && status != "hidden"]),\n        "countryCount": count(array::unique(*[_type == "property" && defined(name) && status != "hidden"].country)),\n        "topPrice": math::max(*[_type == "property" && defined(name) && status != "hidden"].price)\n      }\n    }\n  }\n}': PAGE_QUERY_RESULT;
     '*[_type == "page" && _id == *[_id == "siteSettings"][0].homePage._ref][0]{\n  title,\n  seo{ metaTitle, metaDescription, noIndex, ogImage },\n  "siteName": *[_id == "siteSettings"][0].title,\n  "defaultOgImage": *[_id == "siteSettings"][0].seo.ogImage\n}': HOME_SEO_QUERY_RESULT;
     '*[_type == "page" && slug.current == $slug][0]{\n  title,\n  seo{ metaTitle, metaDescription, noIndex, ogImage },\n  "siteName": *[_id == "siteSettings"][0].title,\n  "defaultOgImage": *[_id == "siteSettings"][0].seo.ogImage\n}': PAGE_SEO_QUERY_RESULT;
     '*[_type == "page" && _id == *[_id == "siteSettings"][0].homePage._ref][0].slug.current': HOME_SLUG_QUERY_RESULT;
     '*[_type == "page" && defined(slug.current) && _id != *[_id == "siteSettings"][0].homePage._ref]{ "slug": slug.current }': PAGE_SLUGS_QUERY_RESULT;
     '*[_type == "page" && defined(slug.current) && seo.noIndex != true]{\n    "path": select(_id == *[_id == "siteSettings"][0].homePage._ref => "/", "/" + slug.current),\n    _updatedAt\n  }': SITEMAP_QUERY_RESULT;
-    '*[_type == "property" && defined(name) && status != "hidden"] | order(coalesce(sortOrder, 9999) asc, price desc) {\n  _id,\n  _updatedAt,\n  name,\n  "slug": slug.current,\n  price,\n  currency,\n  status,\n  type,\n  beds,\n  city,\n  country,\n  region,\n  tag,\n  badge,\n  art { scene, image { asset, crop, hotspot, alt } },\n  gallery[]{ _key, scene, image { asset, crop, hotspot, alt } }\n}': PROPERTIES_QUERY_RESULT;
-    '*[_type == "property" && defined(name) && status != "hidden" && _id in $ids] {\n  _id,\n  _updatedAt,\n  name,\n  "slug": slug.current,\n  price,\n  currency,\n  status,\n  type,\n  beds,\n  city,\n  country,\n  region,\n  tag,\n  badge,\n  art { scene, image { asset, crop, hotspot, alt } },\n  gallery[]{ _key, scene, image { asset, crop, hotspot, alt } }\n}': PROPERTIES_BY_ID_QUERY_RESULT;
-    '*[_type == "property" && defined(name) && status != "hidden" && slug.current == $slug][0] {\n  _id,\n  _updatedAt,\n  name,\n  "slug": slug.current,\n  price,\n  currency,\n  status,\n  type,\n  beds,\n  baths,\n  area,\n  city,\n  country,\n  region,\n  tag,\n  badge,\n  summary,\n  description,\n  amenities,\n  art { scene, image { asset, crop, hotspot, alt } },\n  gallery[]{ _key, scene, image { asset, crop, hotspot, alt } },\n  seo{ metaTitle, metaDescription, noIndex, ogImage },\n  "siteName": *[_id == "siteSettings"][0].title,\n  "defaultOgImage": *[_id == "siteSettings"][0].seo.ogImage\n}': PROPERTY_QUERY_RESULT;
+    '*[_type == "property" && defined(name) && status != "hidden"] | order(coalesce(sortOrder, 9999) asc, price desc) {\n  _id,\n  _updatedAt,\n  name,\n  "slug": slug.current,\n  price,\n  currency,\n  status,\n  type,\n  beds,\n  city,\n  country,\n  region,\n  tag,\n  badge,\n  art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },\n  gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }\n}': PROPERTIES_QUERY_RESULT;
+    '*[_type == "property" && defined(name) && status != "hidden" && _id in $ids] {\n  _id,\n  _updatedAt,\n  name,\n  "slug": slug.current,\n  price,\n  currency,\n  status,\n  type,\n  beds,\n  city,\n  country,\n  region,\n  tag,\n  badge,\n  art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },\n  gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }\n}': PROPERTIES_BY_ID_QUERY_RESULT;
+    '*[_type == "property" && defined(name) && status != "hidden" && slug.current == $slug][0] {\n  _id,\n  _updatedAt,\n  name,\n  "slug": slug.current,\n  price,\n  currency,\n  status,\n  type,\n  beds,\n  baths,\n  area,\n  city,\n  country,\n  region,\n  tag,\n  badge,\n  summary,\n  description,\n  amenities,\n  art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },\n  gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },\n  seo{ metaTitle, metaDescription, noIndex, ogImage },\n  "siteName": *[_id == "siteSettings"][0].title,\n  "defaultOgImage": *[_id == "siteSettings"][0].seo.ogImage\n}': PROPERTY_QUERY_RESULT;
     '*[_type == "property" && defined(name) && status != "hidden" && defined(slug.current)]{ "slug": slug.current, _updatedAt }': PROPERTY_SLUGS_QUERY_RESULT;
     '{\n  "settings": *[_id == "siteSettings"][0]{\n    title,\n    wordmark,\n    wordmarkTagline,\n    logo{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    headerCta { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} },\n    "conciergeEnabled": coalesce(concierge.enabled, false),\n    navigation[]{\n      _key,\n      label,\n      color,\n      "href": select(\n        page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n        defined(page->slug.current) => "/" + page->slug.current\n      )\n    },\n    footer{ blurb, exploreHeading, regionsHeading, regions, contactHeading, contactLines, copyright, defaultNote },\n    seo{ defaultTitle, description, ogImage }\n  },\n  "pages": *[_type == "page" && defined(slug.current)]{\n    _id,\n    "path": select(_id == *[_id == "siteSettings"][0].homePage._ref => "/", "/" + slug.current),\n    footerNote,\n    headerCta { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }\n  },\n  "cities": array::unique(\n    *[_type == "property" && defined(name) && status != "hidden" && defined(city)] | order(coalesce(sortOrder, 9999) asc).city\n  )\n}': LAYOUT_QUERY_RESULT;
     '*[_id == "siteSettings"][0]{\n  title,\n  "tagline": seo.description\n}': OG_QUERY_RESULT;

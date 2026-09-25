@@ -96,6 +96,9 @@ export default async function PropertyPage({ params }: Props) {
       height={900}
       sizes="(max-width: 1080px) 100vw, 1100px"
       priority={i === 0}
+      blur={i === 0}
+      /* portrait phone shots are shown whole rather than sliced to 16:9 */
+      fit="auto"
     />
   ));
 
@@ -200,8 +203,11 @@ export default async function PropertyPage({ params }: Props) {
           {facts.length ? (
             <div className="mt-10 flex flex-wrap border-t border-ink/15">
               {facts.map(([label, value]) => (
-                <div key={label} className="min-w-[160px] flex-1 border-r border-ink/15 py-7 last:border-r-0">
-                  <div className="font-display text-[30px] font-extrabold">{value}</div>
+                <div
+                  key={label}
+                  className="min-w-[150px] flex-1 border-r border-ink/15 px-5 py-7 first:pl-0 last:border-r-0 mobile:min-w-[50%] mobile:border-r-0 mobile:px-0 mobile:py-5"
+                >
+                  <div className="font-display text-[30px] font-extrabold mobile:text-[24px]">{value}</div>
                   <div className="mt-1.5 font-eyebrow text-[12px] tracking-[.1em] text-ink/60">
                     {label}
                   </div>

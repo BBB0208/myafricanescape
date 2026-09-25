@@ -61,6 +61,9 @@ export default function EditorialBlock({ block }: { block: BlockOf<"editorial"> 
             width={1000}
             height={800}
             sizes={ART_SIZES}
+            fit="auto"
+            /* each label's first picture is the one shown on switching */
+            blur={f === 0}
             /* only the picture on show at load blocks anything */
             loading={v === 0 && f === 0 ? undefined : "lazy"}
           />

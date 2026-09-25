@@ -70,8 +70,9 @@ images** empty and the section behaves exactly as before: the plain **Tags** are
 shown and the single **Artwork** stays put. Once you add switchable images the
 plain tags are no longer used, so you can clear them.
 
-Every picture is sent with the page, so switching is instant — nothing loads when
-a visitor clicks. Keep it to about six; more than that crowds the row.
+Each label's first picture, and the pictures either side of the one on show, are
+loaded ahead of time, so switching is instant — nobody waits on a click. Keep it
+to about six labels; more than that crowds the row.
 
 Arrow keys move between the labels, and Home and End jump to the ends, so the
 row works without a mouse.
@@ -107,6 +108,12 @@ pill and a counter:
 | Editorial switchable images | `<< >>` plus `01 / 04` on the picture |
 | Hero backgrounds | `<< >>` plus `01 / 03`, bottom right |
 
+Only the picture on show and its two neighbours are loaded up front, so a
+listing can carry two dozen photos without slowing the grid. A portrait photo
+in a landscape frame (a phone shot on a listing's page, say) is shown whole
+over a soft, blurred fill rather than sliced to fit; the card's main photo is
+always cropped to fill, so choose a landscape one for it where you can.
+
 Those `<<` and `>>` are lucide icons, not typed characters, so they stay sharp at
 any size and match everywhere they appear.
 
@@ -115,7 +122,16 @@ stops for the rest of the visit, so it never moves under them.
 
 ---
 
-## Folding Episodes into Lifestyle (one-off)
+## Episodes page
+
+Episodes is its own page again, opening on the My African Escape trailer
+(an **Episode reel** section, below), followed by the event calendar. `/events`
+redirects to `/episodes`. Add more films as further episodes in that reel.
+
+The one-off fold below is retired: `npm run migrate:episodes` now stops as soon
+as it sees the Episodes page has an Episode reel, so it can't delete the page.
+
+## Folding Episodes into Lifestyle (retired)
 
 Episodes is now part of Lifestyle. If you are setting up a fresh dataset the
 seed already builds it that way; an existing dataset is migrated once:

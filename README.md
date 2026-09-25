@@ -71,7 +71,7 @@ sanity/
   structure.ts               Studio desk structure (Site settings singleton)
 docs/CMS.md                  managing listings, env vars, the webhook
 scripts/seed.ts              the seed content (a one-off fixture, not a live source)
-scripts/migrate-episodes.ts  folds the Episodes page into Lifestyle (run once)
+scripts/migrate-episodes.ts  the retired Episodes → Lifestyle fold (now a no-op)
 legacy/                      the original static site, kept for reference
 ```
 
@@ -97,6 +97,13 @@ legacy/                      the original static site, kept for reference
   does the formatting. The choice is kept in a `preferred_currency` cookie, read
   during SSR so the first paint is already right. If every provider is
   unreachable the site falls back to the last cached rates, then to USD.
+- **Images** go straight from Sanity's image CDN to the browser
+  (`sanity/lib/imageLoader.ts`, set as the `next/image` loader): each srcset
+  entry is a WebP/AVIF at exactly that width, never beyond the original. The
+  first picture of each card, hero and gallery paints Sanity's blurred preview
+  while it loads; the page's main image is preloaded and the CDN preconnected;
+  extra hero slides and gallery frames load only after the page has, or when
+  someone shows interest in a card.
 - Icons are [lucide](https://lucide.dev) (`lucide-react`), imported one at a time
   so only what's used ships. Weight and the shared stroke live in
   [lib/icons.ts](lib/icons.ts); icons inherit `currentColor` and are

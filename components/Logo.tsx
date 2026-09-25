@@ -32,7 +32,8 @@ export default function Logo({
         alt={logo.alt || [line1, line2].filter(Boolean).join(" ") || "Home"}
         width={logo.width}
         height={logo.height}
-        priority={priority}
+        /* in the header on every page: fetched straight away */
+        loading={priority ? "eager" : undefined}
         unoptimized={logo.url.endsWith(".svg")}
         sizes="320px"
         className={cn("h-full w-auto object-contain", className)}

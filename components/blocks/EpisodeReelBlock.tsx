@@ -16,10 +16,15 @@ function poster(image: NonNullable<BlockOf<"episodeReel">["episodes"]>[number]["
   if (!image?.asset?._ref) {
     return <Scene name="lake" className="h-full w-full" />;
   }
+  /* sized to the screen, never beyond the original */
+  const source = image as Parameters<typeof urlFor>[0];
+  const at = (w: number) => urlFor(source).width(w).height(Math.round((w * 9) / 16)).fit("crop").url();
   return (
     // eslint-disable-next-line @next/next/no-img-element -- fills a fixed-ratio stage
     <img
-      src={urlFor(image as Parameters<typeof urlFor>[0]).width(1920).height(1080).fit("crop").url()}
+      src={at(1280)}
+      srcSet={[640, 960, 1280, 1920].map((w) => `${at(w)} ${w}w`).join(", ")}
+      sizes="100vw"
       alt={stegaClean(image.alt) ?? ""}
       className="h-full w-full object-cover"
       loading="lazy"

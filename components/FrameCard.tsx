@@ -40,6 +40,7 @@ export default function FrameCard({
           width={800}
           height={600}
           sizes="(max-width: 780px) 100vw, (max-width: 1080px) 50vw, 33vw"
+          blur
         />
         {sceneTag ? (
           <span className="absolute top-2.5 left-2.5 z-[3] rounded-full bg-ink/55 px-2.5 py-[5px] font-eyebrow text-[11px] tracking-[.1em] text-cream backdrop-blur-[4px]">

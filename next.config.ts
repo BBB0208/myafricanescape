@@ -4,17 +4,18 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
-    // photos and logos uploaded to Sanity, served as AVIF/WebP
-    formats: ["image/avif", "image/webp"],
-    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
+    // photos and logos come straight from Sanity's image CDN, sized per
+    // srcset entry and served as WebP/AVIF — no second trip through Next
+    loader: "custom",
+    loaderFile: "./sanity/lib/imageLoader.ts",
   },
   // pages renamed or folded together; keep the old URLs working
   async redirects() {
     return [
       { source: "/financial", destination: "/invest", permanent: false },
-      // Episodes was folded into Lifestyle — see scripts/migrate-episodes.ts
-      { source: "/events", destination: "/lifestyle", permanent: false },
-      { source: "/episodes", destination: "/lifestyle", permanent: false },
+      // Episodes keeps its own page (the trailer and the event calendar);
+      // /events was its original address
+      { source: "/events", destination: "/episodes", permanent: false },
     ];
   },
 };
