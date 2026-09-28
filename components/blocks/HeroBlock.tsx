@@ -13,10 +13,12 @@ const SIZES = {
 
 export default function HeroBlock({
   block,
-  priority,
+  first = false,
 }: {
   block: BlockOf<"hero">;
-  priority?: boolean;
+  /* the hero opens the page: its image is the LCP and its title the h1.
+     Further down a page it is a banner introducing what follows. */
+  first?: boolean;
 }) {
   const size = SIZES[stegaClean(block.size) as keyof typeof SIZES] ?? SIZES.full;
   const buttons = (block.buttons ?? []).filter((b) => b?.label);
@@ -29,7 +31,8 @@ export default function HeroBlock({
         art={block.art}
         slides={block.slides}
         slideSeconds={block.slideSeconds}
-        priority={priority}
+        priority={first}
+        headingLevel={first ? "h1" : "h2"}
         eyebrow={block.eyebrow}
         title={<Headline value={block.title} />}
         lede={block.lede?.length ? <RichText value={block.lede} /> : null}

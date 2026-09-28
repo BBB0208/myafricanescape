@@ -4,13 +4,14 @@ import { anchorField, asideField, eyebrowField, hiddenField, toneField } from ".
 
 /* A full-width episode player. Each episode is either a video uploaded
    here or a YouTube / Vimeo link, with a still image standing in until
-   someone presses play. Visitors page between them with << >>. */
+   someone presses play. Under it, the episode's name sits in its own
+   pill beside << Episodes >>, which pages between them. */
 export const episodeReel = defineType({
   name: "episodeReel",
   title: "Episode reel",
   type: "object",
   icon: PlayIcon,
-  description: "Full-width video player with << >> between episodes.",
+  description: "Full-width video player, with the episode's name and << Episodes >> underneath.",
   fields: [
     eyebrowField,
     defineField({
@@ -35,7 +36,7 @@ export const episodeReel = defineType({
               name: "title",
               title: "Episode name",
               type: "string",
-              description: "Printed between the << >> buttons, e.g. Episodes, or Episode 01.",
+              description: "Shown in its own pill under the player, e.g. Trailer, or Episode 01.",
               validation: (rule) => rule.required().max(48),
             }),
             defineField({
@@ -81,6 +82,15 @@ export const episodeReel = defineType({
         }),
       ],
       validation: (rule) => rule.required().min(1).max(12),
+    }),
+    defineField({
+      name: "pagerLabel",
+      title: "Label between the arrows",
+      type: "string",
+      initialValue: "Episodes",
+      description:
+        "Printed between the << >> buttons under the player. The arrows move between episodes; with one episode they stay at rest.",
+      validation: (rule) => rule.max(24),
     }),
     defineField({
       name: "autoplay",

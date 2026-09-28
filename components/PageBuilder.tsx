@@ -17,7 +17,7 @@ import type { PageBlock, PageData } from "@/sanity/lib/types";
 function renderBlock(block: PageBlock, index: number) {
   switch (block._type) {
     case "hero":
-      return <HeroBlock block={block} priority={index === 0} />;
+      return <HeroBlock block={block} first={index === 0} />;
     case "statsBar":
       return <StatsBarBlock block={block} />;
     case "listingGrid":
@@ -33,7 +33,7 @@ function renderBlock(block: PageBlock, index: number) {
     case "eventList":
       return <EventListBlock block={block} />;
     case "episodeReel":
-      return <EpisodeReelBlock block={block} />;
+      return <EpisodeReelBlock block={block} first={index === 0} />;
     case "ctaBanner":
       return <CtaBannerBlock block={block} />;
     default:

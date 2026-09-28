@@ -1,4 +1,5 @@
 import { stegaClean } from "next-sanity";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 /* Site settings → Social media, as projected by LAYOUT_QUERY. */
@@ -35,35 +36,52 @@ const HOVER: Record<Platform, string> = {
   instagram: "hover:text-[#E1306C] focus-visible:text-[#E1306C]",
 };
 
-/* Drawn on a 24px grid to sit together at one optical size: a solid
-   "f", the play button, and the outlined camera. */
+/* The three marks as the design has them — a bold "f", a solid
+   rounded YouTube block with the play triangle cut through it, and the
+   outlined Instagram camera — all the same height (1em), each as wide
+   as its own shape, so the row reads as one set. */
+const GLYPHS: Record<Platform, { viewBox: string; width: string; body: ReactNode }> = {
+  facebook: {
+    viewBox: "7.25 2.75 10 18.9",
+    width: "w-[.53em]",
+    body: (
+      <path
+        fill="currentColor"
+        d="M13.6 21.5v-8.2h2.8l.45-3.4H13.6V7.75c0-.98.28-1.65 1.7-1.65h1.72V3.08A23 23 0 0 0 14.5 2.95c-2.5 0-4.2 1.52-4.2 4.32V9.9H7.5v3.4h2.8v8.2h3.3Z"
+      />
+    ),
+  },
+  youtube: {
+    viewBox: "1.75 4.75 20.5 14.5",
+    width: "w-[1.41em]",
+    body: (
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M5.4 4.75h13.2a3.65 3.65 0 0 1 3.65 3.65v7.2a3.65 3.65 0 0 1-3.65 3.65H5.4a3.65 3.65 0 0 1-3.65-3.65V8.4A3.65 3.65 0 0 1 5.4 4.75ZM9.4 7.7v8.6L16.9 12 9.4 7.7Z"
+      />
+    ),
+  },
+  instagram: {
+    viewBox: "2 2 20 20",
+    width: "w-[1em]",
+    body: (
+      <>
+        <rect x="3.1" y="3.1" width="17.8" height="17.8" rx="5" fill="none" stroke="currentColor" strokeWidth={2.2} />
+        <circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" strokeWidth={2.2} />
+        <circle cx="17.3" cy="6.7" r="1.3" fill="currentColor" />
+      </>
+    ),
+  },
+};
+
 function Glyph({ platform }: { platform: Platform }) {
-  const common = { viewBox: "0 0 24 24", "aria-hidden": true, className: "size-full" } as const;
-  switch (platform) {
-    case "facebook":
-      return (
-        <svg {...common} fill="currentColor">
-          <path d="M13.6 21.5v-8.2h2.8l.45-3.4H13.6V7.75c0-.98.28-1.65 1.7-1.65h1.72V3.08A23 23 0 0 0 14.5 2.95c-2.5 0-4.2 1.52-4.2 4.32V9.9H7.5v3.4h2.8v8.2h3.3Z" />
-        </svg>
-      );
-    case "youtube":
-      return (
-        <svg {...common} fill="currentColor">
-          <path
-            fillRule="evenodd"
-            d="M6.2 4.75h11.6a4.45 4.45 0 0 1 4.45 4.45v5.6a4.45 4.45 0 0 1-4.45 4.45H6.2a4.45 4.45 0 0 1-4.45-4.45V9.2A4.45 4.45 0 0 1 6.2 4.75ZM9.9 8.7v6.6l5.7-3.3-5.7-3.3Z"
-          />
-        </svg>
-      );
-    case "instagram":
-      return (
-        <svg {...common} fill="none" stroke="currentColor" strokeWidth={1.9}>
-          <rect x="3" y="3" width="18" height="18" rx="5.2" />
-          <circle cx="12" cy="12" r="4.1" />
-          <circle cx="17.35" cy="6.65" r="1.15" fill="currentColor" stroke="none" />
-        </svg>
-      );
-  }
+  const { viewBox, width, body } = GLYPHS[platform];
+  return (
+    <svg viewBox={viewBox} aria-hidden className={cn("block h-[1em]", width)}>
+      {body}
+    </svg>
+  );
 }
 
 const PLATFORMS: Platform[] = ["facebook", "youtube", "instagram"];
@@ -77,10 +95,14 @@ export default function SocialLinks({
   social: SocialData;
   /* the ground they sit on */
   tone?: "ink" | "cream";
+  /* set the icons' height with a text size, e.g. text-[22px] */
   className?: string;
 }) {
   return (
-    <ul aria-label="Follow My African Escape" className={cn("flex items-center gap-1", className)}>
+    <ul
+      aria-label="Follow My African Escape"
+      className={cn("flex items-center gap-0.5 text-[28px]", className)}
+    >
       {PLATFORMS.map((platform) => {
         const href = stegaClean(social?.[platform])?.trim() || FALLBACK[platform];
         return (
@@ -91,10 +113,11 @@ export default function SocialLinks({
               rel="noopener noreferrer"
               aria-label={`${LABEL[platform]} (opens in a new tab)`}
               className={cn(
-                "flex size-9 items-center justify-center rounded-full p-[7px] transition-[color,transform] duration-300 ease-soft hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-1",
+                // a comfortable target around each mark
+                "flex h-[1.6em] min-w-[1.5em] items-center justify-center rounded-lg px-[.2em] transition-[color,transform] duration-300 ease-soft hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-1",
                 tone === "ink"
-                  ? "text-ink focus-visible:outline-ink/50"
-                  : "text-cream/75 focus-visible:outline-cream/60",
+                  ? "text-[#1c1a19] focus-visible:outline-ink/50"
+                  : "text-cream/80 focus-visible:outline-cream/60",
                 HOVER[platform],
               )}
             >

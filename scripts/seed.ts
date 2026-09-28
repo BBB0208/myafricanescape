@@ -78,12 +78,18 @@ const section = <T extends Record<string, unknown>>(type: string, fields: T) => 
   ...fields,
 });
 
+/* Tags that are buttons: each changes the picture beside the copy. */
+const views = (items: [label: string, scene: string][]) =>
+  items.map(([label, scene]) => ({ _key: key(), _type: "editorialView", label, art: art(scene) }));
+
 /* ---------- ids ---------- */
 
 const PAGE_IDS = {
   home: "page-home",
   lifestyle: "page-lifestyle",
   financial: "page-financial",
+  // the id is historic: this was the Events page before it was Episodes
+  episodes: "page-events",
 };
 
 /* ---------- listings ---------- */
@@ -283,6 +289,12 @@ const lifestyle = {
         ),
       ],
       pills: ["Private chefs", "Chauffeur network", "Art advisory", "Wellness retreats"],
+      views: views([
+        ["Private chefs", "coast"],
+        ["Chauffeur network", "desert"],
+        ["Art advisory", "riad"],
+        ["Wellness retreats", "lake"],
+      ]),
       art: art("coast"),
       artPosition: "left",
       tone: "cream",
@@ -299,6 +311,11 @@ const lifestyle = {
         ),
       ],
       pills: ["Owner dinners", "Cross-city intros", "Founders' circle"],
+      views: views([
+        ["Owner dinners", "savanna"],
+        ["Cross-city intros", "skyline"],
+        ["Founders' circle", "lake"],
+      ]),
       art: art("savanna"),
       artPosition: "right",
       tone: "teal",
@@ -315,6 +332,11 @@ const lifestyle = {
         ),
       ],
       pills: ["Local ateliers", "Bespoke furnishing", "Turnkey move-in"],
+      views: views([
+        ["Local ateliers", "riad"],
+        ["Bespoke furnishing", "vineyard"],
+        ["Turnkey move-in", "coast"],
+      ]),
       art: art("riad"),
       artPosition: "left",
       tone: "cream",
@@ -331,12 +353,24 @@ const lifestyle = {
         { scene: "river", title: "Financing desk", body: "Cross-border mortgages, explained simply." },
       ].map(({ scene, ...card }) => ({ _key: key(), _type: "card", ...card, art: art(scene) })),
     }),
-    section("eventList", {
-      // the old Episodes hero, now this section's own head
+    // moved from Episodes: a banner over the calendar (further down a
+    // page a hero is an h2, and its image loads lazily)
+    section("hero", {
       eyebrow: "On location, across the continent",
-      title: "Launches, previews and the odd good party.",
-      aside:
-        "Property launches, design previews and owner gatherings — RSVP through your advisor or drop your details below.",
+      title: [block("Launches, previews"), block("and the odd good party.")],
+      lede: [
+        block(
+          "Property launches, design previews and owner gatherings — RSVP through your advisor or drop your details below.",
+        ),
+      ],
+      art: art("lake"),
+      size: "compact",
+      showReelStrip: true,
+    }),
+    section("eventList", {
+      eyebrow: "Upcoming",
+      title: "The next few months, on location.",
+      aside: "Members get priority RSVP two weeks before public invites go out.",
       showPast: false,
       rsvpLabel: "RSVP",
       emptyMessage: "New dates are being scheduled — check back soon.",
@@ -362,6 +396,38 @@ const lifestyle = {
     metaTitle: "Lifestyle",
     metaDescription:
       "Concierge, culture, cuisine and community — the Amara lifestyle desk turns a property into a life across Africa.",
+  },
+};
+
+/* The trailer, and nothing else. Add further films as more episodes. */
+const episodes = {
+  _id: PAGE_IDS.episodes,
+  _type: "page",
+  title: "Episodes",
+  slug: { _type: "slug", current: "episodes" },
+  pageBuilder: [
+    section("episodeReel", {
+      eyebrow: "Now showing",
+      title: "My African Escape — the trailer.",
+      pagerLabel: "Episodes",
+      episodes: [
+        {
+          _key: key(),
+          _type: "episode",
+          title: "Trailer",
+          videoUrl: "https://www.youtube.com/watch?v=y1tk5yaoC_E",
+        },
+      ],
+      autoplay: false,
+      tone: "teal",
+      anchorId: "trailer",
+    }),
+  ],
+  seo: {
+    _type: "seo",
+    metaTitle: "Episodes",
+    metaDescription:
+      "Watch the My African Escape trailer — the homes, the cities and the people behind them, across the continent.",
   },
 };
 
@@ -445,7 +511,11 @@ const settings = {
     { label: "Property", page: ref(PAGE_IDS.home), color: "grape" },
     { label: "Lifestyle", page: ref(PAGE_IDS.lifestyle), color: "saffron" },
     { label: "Invest", page: ref(PAGE_IDS.financial), color: "jungle" },
+    { label: "Episodes", page: ref(PAGE_IDS.episodes), color: "flame" },
   ].map((item) => ({ _key: key(), _type: "navItem", ...item })),
+  // the icons at the top right and in the footer; Facebook and Instagram
+  // link to the platforms' home pages until their addresses are added
+  social: { youtube: "https://www.youtube.com/@MyAfricanEscape-SA" },
   // opens May, so it stays hidden until concierge.enabled is switched on
   headerCta: headerCta("Ask May", toMay()),
   footer: {
@@ -507,6 +577,7 @@ async function main() {
     home,
     lifestyle,
     financial,
+    episodes,
     ...properties,
     ...events,
   ];
@@ -515,7 +586,7 @@ async function main() {
   await tx.commit({ visibility: "sync" });
 
   console.log(
-    `Done: 1 settings, 3 pages, ${properties.length} listings, ${events.length} events (${docs.length} documents).`,
+    `Done: 1 settings, 4 pages, ${properties.length} listings, ${events.length} events (${docs.length} documents).`,
   );
 }
 

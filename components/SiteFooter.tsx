@@ -120,7 +120,7 @@ export default function SiteFooter({
             {footer?.blurb ? (
               <p className="mt-5 max-w-[34ch] text-[14.5px] text-cream/60">{footer.blurb}</p>
             ) : null}
-            <SocialLinks social={social} tone="cream" className="mt-5 -ml-2" />
+            <SocialLinks social={social} tone="cream" className="mt-5 -ml-1.5 text-[22px]" />
             <a
               href="#top"
               className="group/top mt-8 inline-flex items-center gap-3 font-pill text-[13px] uppercase tracking-[.14em] text-cream/65 transition-colors duration-300 hover:text-gold"

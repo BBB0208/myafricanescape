@@ -15,6 +15,8 @@ export default function SectionHead({
   tone = "cream",
   center = false,
   reveal = true,
+  level = "h2",
+  className: extraClassName,
 }: {
   eyebrow?: ReactNode;
   title: ReactNode;
@@ -23,7 +25,11 @@ export default function SectionHead({
   tone?: Tone;
   center?: boolean;
   reveal?: boolean;
+  /* h1 when the section opens a page that has no hero */
+  level?: "h1" | "h2";
+  className?: string;
 }) {
+  const Heading = level;
   const eyebrowNode = eyebrow ? (
     <Eyebrow tone={EYEBROW_TONE[tone]} className="r-fade">
       {eyebrow}
@@ -32,22 +38,23 @@ export default function SectionHead({
   const className = cn(
     "mb-14 flex flex-wrap gap-10",
     center ? "flex-col items-center text-center" : "items-end justify-between",
+    extraClassName,
   );
 
   const content = center ? (
     <>
       {eyebrowNode}
-      <h2 className={cn("r-wipe mt-4 max-w-[20ch] text-[clamp(32px,4vw,52px)] [--d:120ms]", titleClassName)}>
+      <Heading className={cn("r-wipe mt-4 max-w-[20ch] text-[clamp(32px,4vw,52px)] [--d:120ms]", titleClassName)}>
         {title}
-      </h2>
+      </Heading>
     </>
   ) : (
     <>
       <div>
         {eyebrowNode}
-        <h2 className={cn("r-wipe mt-4 max-w-[16ch] text-[clamp(32px,4vw,52px)] [--d:120ms]", titleClassName)}>
+        <Heading className={cn("r-wipe mt-4 max-w-[16ch] text-[clamp(32px,4vw,52px)] [--d:120ms]", titleClassName)}>
           {title}
-        </h2>
+        </Heading>
       </div>
       {aside ? (
         <p className={cn("r-fade max-w-[40ch] text-[16px] [--d:260ms]", MUTED_TEXT[tone])}>{aside}</p>

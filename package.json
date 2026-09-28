@@ -10,7 +10,8 @@
     "seed": "sanity exec scripts/seed.ts --with-user-token",
     "typegen": "sanity schema extract --path=sanity/extract.json --enforce-required-fields --force && sanity typegen generate",
     "migrate:redesign": "sanity exec scripts/migrate-redesign.ts --with-user-token",
-    "migrate:episodes": "sanity exec scripts/migrate-episodes.ts --with-user-token"
+    "migrate:episodes": "sanity exec scripts/migrate-episodes.ts --with-user-token",
+    "migrate:web-updates": "sanity exec scripts/migrate-web-updates.ts --with-user-token"
   },
   "dependencies": {
     "@portabletext/react": "^7.0.1",

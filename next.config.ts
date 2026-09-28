@@ -13,9 +13,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/financial", destination: "/invest", permanent: false },
-      // Episodes keeps its own page (the trailer and the event calendar);
-      // /events was its original address
-      { source: "/events", destination: "/episodes", permanent: false },
+      // /events was the event calendar's original address; the calendar now
+      // lives on Lifestyle, while Episodes is the trailer alone
+      { source: "/events", destination: "/lifestyle#calendar", permanent: false },
     ];
   },
 };

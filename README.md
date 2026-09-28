@@ -15,6 +15,7 @@ npm run build && npm start
 | ------------------ | ----------------------------------------------------------------- |
 | `npm run seed`     | Loads the full site into Sanity (idempotent — resets to the seed) |
 | `npm run migrate:redesign` | Applies the 2026 redesign to existing content, keeping edits |
+| `npm run migrate:web-updates` | Applies the "web updates 2" content changes (Episodes, Lifestyle, social) |
 | `npm run typegen`  | Extracts the schema and regenerates `sanity/types.ts`             |
 | `npm run lint`     | Type-checks the project                                           |
 
@@ -24,8 +25,9 @@ Open **http://localhost:3000/studio**.
 
 - **Presentation** — the live site beside the editor. Click any text to edit it,
   drag sections to reorder them, and watch drafts update in place.
-- **Content → Site settings** — logo, home page, navigation (label and pill
-  colour per item), the header button, footer, May, default SEO.
+- **Content → Site settings** — logo (the built-in one is used until one is
+  uploaded), social media links, home page, navigation (label and pill colour
+  per item), the header button, footer, May, default SEO.
 - **May, the concierge, is switched off for now** (Site settings → May concierge →
   "Show May on the site"). While off, the chat launcher, the header's Ask May button
   and every button that opens May are hidden; switching it on brings them all back.
@@ -40,8 +42,8 @@ Every visual is one of the eight scene illustrations; upload a photo on any
 artwork field to replace it. Listings take extra frames under **More frames** —
 visitors page through them with the `<< >>` buttons on the card.
 
-`/financial` and `/events` redirect to their renamed pages, `/invest` and `/episodes`
-(see `next.config.ts`).
+`/financial` redirects to `/invest`, and `/events` to the event calendar on
+`/lifestyle#calendar` (see `next.config.ts`). Episodes is the trailer alone.
 
 ## Layout
 
@@ -72,6 +74,7 @@ sanity/
 docs/CMS.md                  managing listings, env vars, the webhook
 scripts/seed.ts              the seed content (a one-off fixture, not a live source)
 scripts/migrate-episodes.ts  the retired Episodes → Lifestyle fold (now a no-op)
+scripts/migrate-web-updates.ts  Episodes → trailer only; calendar to Lifestyle
 legacy/                      the original static site, kept for reference
 ```
 

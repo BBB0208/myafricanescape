@@ -11,8 +11,12 @@ import { urlFor } from "@/sanity/lib/image";
 import type { BlockOf } from "@/sanity/lib/types";
 
 /* The still behind each episode: the uploaded image, or a scene
-   illustration so a half-filled episode never shows a black hole. */
-function poster(image: NonNullable<BlockOf<"episodeReel">["episodes"]>[number]["poster"]) {
+   illustration so a half-filled episode never shows a black hole.
+   When the reel opens the page, the first still is its main image. */
+function poster(
+  image: NonNullable<BlockOf<"episodeReel">["episodes"]>[number]["poster"],
+  priority: boolean,
+) {
   if (!image?.asset?._ref) {
     return <Scene name="lake" className="h-full w-full" />;
   }
@@ -27,13 +31,21 @@ function poster(image: NonNullable<BlockOf<"episodeReel">["episodes"]>[number]["
       sizes="100vw"
       alt={stegaClean(image.alt) ?? ""}
       className="h-full w-full object-cover"
-      loading="lazy"
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : undefined}
       decoding="async"
     />
   );
 }
 
-export default function EpisodeReelBlock({ block }: { block: BlockOf<"episodeReel"> }) {
+export default function EpisodeReelBlock({
+  block,
+  first = false,
+}: {
+  block: BlockOf<"episodeReel">;
+  /* the reel opens the page: its heading is the page's h1 */
+  first?: boolean;
+}) {
   const tone = toTone(block.tone, "teal");
 
   const episodes: Episode[] = (block.episodes ?? []).flatMap((episode, i) => {
@@ -48,7 +60,7 @@ export default function EpisodeReelBlock({ block }: { block: BlockOf<"episodeRee
         title,
         embed: toEmbed(stegaClean(episode.videoUrl)),
         file,
-        poster: poster(episode.poster),
+        poster: poster(episode.poster, first && i === 0),
         posterAlt: stegaClean(episode.poster?.alt) ?? "",
       },
     ];
@@ -58,15 +70,31 @@ export default function EpisodeReelBlock({ block }: { block: BlockOf<"episodeRee
   const hasHead = Boolean(block.eyebrow || block.title || block.aside);
 
   return (
-    <Section id={stegaClean(block.anchorId) || undefined} tone={tone} padding={hasHead ? undefined : "py-0"}>
-      {hasHead ? (
-        <Container>
-          <SectionHead eyebrow={block.eyebrow} title={block.title ?? ""} aside={block.aside} tone={tone} />
+    <>
+      {/* opening the page, the film strip runs under the header the way
+          it runs under every hero */}
+      {first ? <ReelStrip /> : null}
+      <Section id={stegaClean(block.anchorId) || undefined} tone={tone} padding="pb-0">
+        <Container className={hasHead ? "pt-[104px] mobile:pt-[72px]" : undefined}>
+          {hasHead ? (
+            <SectionHead
+              eyebrow={block.eyebrow}
+              title={block.title ?? ""}
+              aside={block.aside}
+              tone={tone}
+              level={first ? "h1" : "h2"}
+              /* the heading sits close over the film it introduces */
+              className="mb-10! mobile:mb-8!"
+            />
+          ) : null}
         </Container>
-      ) : null}
-      {/* full width, edge to edge, the way the reel is meant to read */}
-      <EpisodeReel episodes={episodes} autoplay={block.autoplay === true} />
-      <ReelStrip />
-    </Section>
+        {/* full width, edge to edge, the way the reel is meant to read */}
+        <EpisodeReel
+          episodes={episodes}
+          pagerLabel={stegaClean(block.pagerLabel) || "Episodes"}
+          autoplay={block.autoplay === true}
+        />
+      </Section>
+    </>
   );
 }

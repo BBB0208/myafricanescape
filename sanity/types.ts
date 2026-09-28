@@ -163,6 +163,7 @@ export type EpisodeReel = {
     _type: "episode";
     _key: string;
   }>;
+  pagerLabel?: string;
   autoplay?: boolean;
   tone: "cream" | "teal" | "sunset";
   anchorId?: string;
@@ -403,6 +404,11 @@ export type SiteSettings = {
   };
   wordmark?: string;
   wordmarkTagline?: string;
+  social?: {
+    facebook?: string;
+    youtube?: string;
+    instagram?: string;
+  };
   navigation?: Array<{
     label: string;
     page: PageReference;
@@ -823,6 +829,7 @@ export type HOME_PAGE_QUERY_RESULT = {
             lqip: string | null;
           } | null;
         }>;
+        pagerLabel?: string;
         autoplay?: boolean;
         tone: "cream" | "sunset" | "teal";
         anchorId?: string;
@@ -1155,6 +1162,7 @@ export type PAGE_QUERY_RESULT = {
             lqip: string | null;
           } | null;
         }>;
+        pagerLabel?: string;
         autoplay?: boolean;
         tone: "cream" | "sunset" | "teal";
         anchorId?: string;
@@ -1638,7 +1646,7 @@ export type PROPERTY_SLUGS_QUERY_RESULT = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: LAYOUT_QUERY
-// Query: {  "settings": *[_id == "siteSettings"][0]{    title,    wordmark,    wordmarkTagline,    logo{      alt,      "url": asset->url,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    headerCta { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} },    "conciergeEnabled": coalesce(concierge.enabled, false),    navigation[]{      _key,      label,      color,      "href": select(        page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",        defined(page->slug.current) => "/" + page->slug.current      )    },    footer{ blurb, exploreHeading, regionsHeading, regions, contactHeading, contactLines, copyright, defaultNote },    seo{ defaultTitle, description, ogImage }  },  "pages": *[_type == "page" && defined(slug.current)]{    _id,    "path": select(_id == *[_id == "siteSettings"][0].homePage._ref => "/", "/" + slug.current),    footerNote,    headerCta { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }  },  "cities": array::unique(    *[_type == "property" && defined(name) && status != "hidden" && defined(city)] | order(coalesce(sortOrder, 9999) asc).city  )}
+// Query: {  "settings": *[_id == "siteSettings"][0]{    title,    wordmark,    wordmarkTagline,    logo{      alt,      "url": asset->url,      "width": asset->metadata.dimensions.width,      "height": asset->metadata.dimensions.height    },    headerCta { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} },    social{ facebook, youtube, instagram },    "conciergeEnabled": coalesce(concierge.enabled, false),    navigation[]{      _key,      label,      color,      "href": select(        page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",        defined(page->slug.current) => "/" + page->slug.current      )    },    footer{ blurb, exploreHeading, regionsHeading, regions, contactHeading, contactLines, copyright, defaultNote },    seo{ defaultTitle, description, ogImage }  },  "pages": *[_type == "page" && defined(slug.current)]{    _id,    "path": select(_id == *[_id == "siteSettings"][0].homePage._ref => "/", "/" + slug.current),    footerNote,    headerCta { _key, label, variant, link {  linkType,  anchor,  url,  openInNewTab,  "pageHref": select(    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",    defined(page->slug.current) => "/" + page->slug.current  )} }  },  "cities": array::unique(    *[_type == "property" && defined(name) && status != "hidden" && defined(city)] | order(coalesce(sortOrder, 9999) asc).city  )}
 export type LAYOUT_QUERY_RESULT = {
   settings:
     | {
@@ -1662,6 +1670,11 @@ export type LAYOUT_QUERY_RESULT = {
             openInNewTab: boolean | null;
             pageHref: string | "/" | null;
           };
+        } | null;
+        social: {
+          facebook: string | null;
+          youtube: string | null;
+          instagram: string | null;
         } | null;
         conciergeEnabled: boolean | false;
         navigation: Array<{
@@ -1698,6 +1711,7 @@ export type LAYOUT_QUERY_RESULT = {
         wordmarkTagline: null;
         logo: null;
         headerCta: null;
+        social: null;
         conciergeEnabled: false;
         navigation: null;
         footer: null;
@@ -1709,6 +1723,7 @@ export type LAYOUT_QUERY_RESULT = {
         wordmarkTagline: null;
         logo: null;
         headerCta: null;
+        social: null;
         conciergeEnabled: false;
         navigation: null;
         footer: null;
@@ -1720,6 +1735,7 @@ export type LAYOUT_QUERY_RESULT = {
         wordmarkTagline: null;
         logo: null;
         headerCta: null;
+        social: null;
         conciergeEnabled: false;
         navigation: null;
         footer: null;
@@ -1752,6 +1768,7 @@ export type LAYOUT_QUERY_RESULT = {
             pageHref: string | "/" | null;
           };
         } | null;
+        social: null;
         conciergeEnabled: false;
         navigation: null;
         footer: null;
@@ -1878,7 +1895,7 @@ declare global {
     '*[_type == "property" && defined(name) && status != "hidden" && _id in $ids] {\n  _id,\n  _updatedAt,\n  name,\n  "slug": slug.current,\n  price,\n  currency,\n  status,\n  type,\n  beds,\n  city,\n  country,\n  region,\n  tag,\n  badge,\n  art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },\n  gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } }\n}': PROPERTIES_BY_ID_QUERY_RESULT;
     '*[_type == "property" && defined(name) && status != "hidden" && slug.current == $slug][0] {\n  _id,\n  _updatedAt,\n  name,\n  "slug": slug.current,\n  price,\n  currency,\n  status,\n  type,\n  beds,\n  baths,\n  area,\n  city,\n  country,\n  region,\n  tag,\n  badge,\n  summary,\n  description,\n  amenities,\n  art { scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },\n  gallery[]{ _key, scene, image { asset, crop, hotspot, alt, "lqip": asset->metadata.lqip } },\n  seo{ metaTitle, metaDescription, noIndex, ogImage },\n  "siteName": *[_id == "siteSettings"][0].title,\n  "defaultOgImage": *[_id == "siteSettings"][0].seo.ogImage\n}': PROPERTY_QUERY_RESULT;
     '*[_type == "property" && defined(name) && status != "hidden" && defined(slug.current)]{ "slug": slug.current, _updatedAt }': PROPERTY_SLUGS_QUERY_RESULT;
-    '{\n  "settings": *[_id == "siteSettings"][0]{\n    title,\n    wordmark,\n    wordmarkTagline,\n    logo{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    headerCta { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} },\n    "conciergeEnabled": coalesce(concierge.enabled, false),\n    navigation[]{\n      _key,\n      label,\n      color,\n      "href": select(\n        page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n        defined(page->slug.current) => "/" + page->slug.current\n      )\n    },\n    footer{ blurb, exploreHeading, regionsHeading, regions, contactHeading, contactLines, copyright, defaultNote },\n    seo{ defaultTitle, description, ogImage }\n  },\n  "pages": *[_type == "page" && defined(slug.current)]{\n    _id,\n    "path": select(_id == *[_id == "siteSettings"][0].homePage._ref => "/", "/" + slug.current),\n    footerNote,\n    headerCta { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }\n  },\n  "cities": array::unique(\n    *[_type == "property" && defined(name) && status != "hidden" && defined(city)] | order(coalesce(sortOrder, 9999) asc).city\n  )\n}': LAYOUT_QUERY_RESULT;
+    '{\n  "settings": *[_id == "siteSettings"][0]{\n    title,\n    wordmark,\n    wordmarkTagline,\n    logo{\n      alt,\n      "url": asset->url,\n      "width": asset->metadata.dimensions.width,\n      "height": asset->metadata.dimensions.height\n    },\n    headerCta { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} },\n    social{ facebook, youtube, instagram },\n    "conciergeEnabled": coalesce(concierge.enabled, false),\n    navigation[]{\n      _key,\n      label,\n      color,\n      "href": select(\n        page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n        defined(page->slug.current) => "/" + page->slug.current\n      )\n    },\n    footer{ blurb, exploreHeading, regionsHeading, regions, contactHeading, contactLines, copyright, defaultNote },\n    seo{ defaultTitle, description, ogImage }\n  },\n  "pages": *[_type == "page" && defined(slug.current)]{\n    _id,\n    "path": select(_id == *[_id == "siteSettings"][0].homePage._ref => "/", "/" + slug.current),\n    footerNote,\n    headerCta { _key, label, variant, link {\n  linkType,\n  anchor,\n  url,\n  openInNewTab,\n  "pageHref": select(\n    page._ref == *[_id == "siteSettings"][0].homePage._ref => "/",\n    defined(page->slug.current) => "/" + page->slug.current\n  )\n} }\n  },\n  "cities": array::unique(\n    *[_type == "property" && defined(name) && status != "hidden" && defined(city)] | order(coalesce(sortOrder, 9999) asc).city\n  )\n}': LAYOUT_QUERY_RESULT;
     '*[_id == "siteSettings"][0]{\n  title,\n  "tagline": seo.description\n}': OG_QUERY_RESULT;
     '{\n  "config": *[_id == "siteSettings"][0].concierge{\n    launcherTitle,\n    launcherSubtitle,\n    panelTitle,\n    panelSubtitle,\n    greeting,\n    inputPlaceholder,\n    budgetBands[]{ _key, label, min, max },\n    typeGroups[]{ _key, label, types },\n    anywhereLabel,\n    callbackMessage\n  },\n  "properties": *[_type == "property" && defined(name) && status != "hidden" && defined(price)]\n    | order(coalesce(sortOrder, 9999) asc) {\n      _id, name, "slug": slug.current, price, currency, status, type, beds, city, country, region, tag\n    }\n}': CONCIERGE_QUERY_RESULT;
   }

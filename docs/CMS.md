@@ -124,33 +124,46 @@ stops for the rest of the visit, so it never moves under them.
 
 ## Episodes page
 
-Episodes is its own page again, opening on the My African Escape trailer
-(an **Episode reel** section, below), followed by the event calendar. `/events`
-redirects to `/episodes`. Add more films as further episodes in that reel.
+Episodes is the trailer and nothing else: one **Episode reel** section.
+Under the player, the episode's name (e.g. *TRAILER*) sits in its own pill
+beside `<< EPISODES >>`; the arrows move between episodes and rest while
+there is only one. Add more films as further episodes in that reel, and set
+the label between the arrows with **Label between the arrows**.
 
-The one-off fold below is retired: `npm run migrate:episodes` now stops as soon
-as it sees the Episodes page has an Episode reel, so it can't delete the page.
+The "Launches, previews" banner, the event calendar and *Private viewings* now
+sit at the end of **Lifestyle**,
+and `/events` redirects to `/lifestyle#calendar`.
 
-## Folding Episodes into Lifestyle (retired)
-
-Episodes is now part of Lifestyle. If you are setting up a fresh dataset the
-seed already builds it that way; an existing dataset is migrated once:
+### Applying it to the live dataset
 
 ```bash
-npm run migrate:episodes
+npx sanity exec scripts/migrate-web-updates.ts --with-user-token -- --dry-run   # the plan, nothing written
+npm run migrate:web-updates                                                      # apply
 ```
 
-It moves the Event calendar and the "Private viewings" section to the end of
-Lifestyle, turns the old Episodes hero into the Event calendar's own heading
-(so Lifestyle keeps a single hero at the top), removes the Episodes nav pill and
-deletes the page. It is safe to re-run — it stops if Lifestyle already has an
-Event calendar.
+It moves the "Launches, previews" banner, the Event calendar and *Private
+viewings* from Episodes to the end of Lifestyle, turns Lifestyle's *Community* tags into switchable
+pictures, and fills in the YouTube channel under Site settings → Social media.
+Both pages change in one transaction; it is safe to re-run, and it stops if
+either page has unpublished changes in the Studio.
 
-`/episodes` and `/events` redirect to `/lifestyle`, so old links and anything
-already indexed keep working.
+*Community*'s buttons start with photos from the uploaded listing photography
+(two or three each, so `<< >>` pages through them). Swap in the team's own
+under Lifestyle → Community → Switchable images whenever they are ready.
 
-**Order matters:** deploy the code first, then run the migration. That way the
-redirect is already live when the page disappears and nobody meets a 404.
+`npm run migrate:episodes` is retired and does nothing.
+
+---
+
+## Logo and social links
+
+- **Logo** — the My African Escape logo ships with the site
+  (`public/logo.png`), so nothing needs uploading. Uploading one under
+  Site settings → General → Logo replaces it everywhere.
+- **Social media** — Site settings → Social media takes the Facebook,
+  YouTube and Instagram addresses. Their icons sit at the top right of every
+  page, in the mobile menu and in the footer. An empty one still shows its
+  icon, linking to that platform's home page, until its address is added.
 
 ---
 

@@ -18,6 +18,7 @@ export default function Hero({
   actions,
   className = "min-h-[88vh]",
   priority = false,
+  headingLevel = "h1",
 }: {
   art: ArtValue;
   /* extra backgrounds; with any present the hero cross-fades through them */
@@ -30,7 +31,9 @@ export default function Hero({
   actions?: ReactNode;
   className?: string;
   priority?: boolean;
+  headingLevel?: "h1" | "h2";
 }) {
+  const Heading = headingLevel;
   /* the main image first, then any extras — one list, rendered server-side */
   const backgrounds = [art, ...(slides ?? [])].filter(Boolean);
 
@@ -65,9 +68,9 @@ export default function Hero({
             {eyebrow}
           </Eyebrow>
         ) : null}
-        <h1 className={cn("mt-[18px] mb-[22px] max-w-[16ch] leading-[.98]", titleClassName)}>
+        <Heading className={cn("mt-[18px] mb-[22px] max-w-[16ch] leading-[.98]", titleClassName)}>
           {title}
-        </h1>
+        </Heading>
         {lede ? (
           <div className="mb-[34px] max-w-[52ch] text-[19px] text-cream/[.88] motion-safe:animate-rise motion-safe:[animation-delay:.18s] [&_p+p]:mt-3">
             {lede}
