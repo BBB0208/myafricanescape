@@ -6,13 +6,17 @@ import Reveal from "@/components/Reveal";
 import { cn } from "@/lib/cn";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { ICON_STROKE } from "@/lib/icons";
-import { useFrameWindow } from "@/components/useFrameWindow";
+import { useFrameWindow, useSwipe } from "@/components/useFrameWindow";
 
 const ARROW =
-  "inline-flex items-center justify-center border-0 bg-transparent px-3 py-[7px] text-pill transition-colors hover:bg-ink/15 focus-visible:bg-ink/15 focus-visible:outline-none";
+  "inline-flex items-center justify-center border-0 bg-transparent px-3 py-[7px] text-pill transition-colors hover:bg-ink/15 focus-visible:bg-ink/15 focus-visible:outline-none " +
+  // a listing with a single photo keeps the pill, at rest
+  "disabled:cursor-default disabled:text-pill/55 disabled:hover:bg-transparent";
 
 /* A listing as a film frame. `frames` are the pre-rendered artworks
-   (main artwork + gallery); the << >> pill pages through them. */
+   (main artwork + gallery); the << >> pill pages through them, and so
+   does a swipe on the photo. Every card carries the pill, so the grid
+   reads as one reel — with a single photo its arrows simply rest. */
 export default function ListingCard({
   frames,
   label,
@@ -37,6 +41,8 @@ export default function ListingCard({
   const [armed, setArmed] = useState(false);
   const arm = () => setArmed(true);
   const mounted = useFrameWindow(index, count, armed);
+  const paged = count > 1;
+  const swipe = useSwipe(go, paged);
 
   return (
     <Reveal
@@ -48,7 +54,7 @@ export default function ListingCard({
       onTouchStart={count > 1 ? arm : undefined}
     >
       <div className="sprockets mb-2.5" />
-      <div className="r-develop relative aspect-[4/3] overflow-hidden rounded-md">
+      <div className="r-develop relative aspect-[4/3] touch-pan-y overflow-hidden rounded-md" {...swipe}>
         {frames.map((frame, i) =>
           mounted(i) ? (
             <div
@@ -79,28 +85,28 @@ export default function ListingCard({
       <div className="relative px-1.5 pt-[18px] pb-1">
         {children}
         {/* z-[2]: above the card-wide link overlay, so paging frames never navigates */}
-        {count > 1 ? (
-          <div className="absolute top-3 right-0 z-[2] flex overflow-hidden rounded-full bg-flame shadow-[0_6px_16px_rgba(255,90,31,.35)]">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              aria-label={`Previous image of ${label}`}
-              className={ARROW}
-            >
-              <ChevronsLeft size={18} strokeWidth={ICON_STROKE} aria-hidden />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              aria-label={`Next image of ${label}`}
-              className={ARROW}
-            >
-              <ChevronsRight size={18} strokeWidth={ICON_STROKE} aria-hidden />
-            </button>
-          </div>
-        ) : null}
+        <div className="absolute top-3 right-0 z-[2] flex overflow-hidden rounded-full bg-flame shadow-[0_6px_16px_rgba(255,90,31,.35)]">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            disabled={!paged}
+            aria-label={`Previous image of ${label}`}
+            className={ARROW}
+          >
+            <ChevronsLeft size={18} strokeWidth={ICON_STROKE} aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            disabled={!paged}
+            aria-label={`Next image of ${label}`}
+            className={ARROW}
+          >
+            <ChevronsRight size={18} strokeWidth={ICON_STROKE} aria-hidden />
+          </button>
+        </div>
         <span className="sr-only" aria-live="polite">
-          {count > 1 ? `Image ${index + 1} of ${count}` : ""}
+          {paged ? `Image ${index + 1} of ${count}` : ""}
         </span>
       </div>
     </Reveal>

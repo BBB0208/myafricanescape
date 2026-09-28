@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import type { ButtonValue } from "@/components/CmsButton";
 import CurrencySelector from "@/components/currency/CurrencySelector";
 import Logo, { type LogoData } from "@/components/Logo";
+import SocialLinks, { type SocialData } from "@/components/SocialLinks";
 import { useMay } from "@/components/May";
 import { cn } from "@/lib/cn";
 import { isConciergeLink, resolveHref } from "@/lib/links";
@@ -52,6 +53,7 @@ export default function SiteHeader({
   nav,
   pages,
   cta: siteCta,
+  social,
 }: {
   logo: LogoData;
   line1?: string | null;
@@ -59,6 +61,7 @@ export default function SiteHeader({
   nav: NavItem[];
   pages: PageChrome[];
   cta?: ButtonValue;
+  social: SocialData;
 }) {
   const pathname = usePathname();
   const { openAndGreet, enabled: mayEnabled } = useMay();
@@ -119,12 +122,15 @@ export default function SiteHeader({
             scrolled ? "py-2" : "py-3.5",
           )}
         >
+          {/* the logo is wide, so it is sized by width and eases down
+              once the page scrolls */}
           <Link
             href="/"
+            aria-label="My African Escape — home"
             className={cn(
-              "flex items-center justify-self-start transition-[height,font-size] duration-300",
-              scrolled ? "h-[58px] text-[28px]" : "h-[96px] text-[42px]",
-              "mobile:h-[56px] mobile:text-[26px]",
+              "flex items-center justify-self-start transition-[width,font-size] duration-300 ease-soft",
+              scrolled ? "w-[240px] text-[28px]" : "w-[320px] text-[42px]",
+              "tablet:w-[210px] mobile:w-[178px] mobile:text-[26px]",
             )}
           >
             <Logo logo={logo} line1={line1} line2={line2} priority />
@@ -148,6 +154,7 @@ export default function SiteHeader({
             {/* display currency — prices stay quoted in USD */}
             <CurrencySelector className="mobile:pr-2.5 mobile:pl-3 mobile:text-[12px]" />
             <div className="mobile:hidden">{ctaNode}</div>
+            <SocialLinks social={social} className="-mr-2 mobile:hidden" />
             <button
               type="button"
               aria-label="Open menu"
@@ -201,6 +208,7 @@ export default function SiteHeader({
           </div>
         ) : null}
         <CurrencySelector tone="dark" className="mt-4" />
+        <SocialLinks social={social} tone="cream" className="mt-auto -ml-2" />
       </div>
     </>
   );

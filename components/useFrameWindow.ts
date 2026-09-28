@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { TouchEvent } from "react";
 
 /* Which frames of a pager to put in the DOM: the one on show, any frame
    visited before (so paging back never flashes) and — once `armed` —
@@ -20,6 +21,35 @@ export function useFrameWindow(index: number, count: number, armed = true) {
       (armed && count > 1 && (i === (index + 1) % count || i === (index - 1 + count) % count)),
     [seen, index, count, armed],
   );
+}
+
+/* A horizontal swipe on a touch screen pages through frames, like the
+   << >> arrows: right-to-left is next, left-to-right is previous. A
+   mostly vertical drag is left alone, so the page still scrolls, and
+   a swipe never becomes a tap on whatever it started over. */
+export function useSwipe(go: (step: number) => void, enabled = true) {
+  const start = useRef<{ x: number; y: number } | null>(null);
+
+  const onTouchStart = useCallback((event: TouchEvent) => {
+    const touch = event.touches[0];
+    start.current = event.touches.length === 1 && touch ? { x: touch.clientX, y: touch.clientY } : null;
+  }, []);
+
+  const onTouchEnd = useCallback(
+    (event: TouchEvent) => {
+      const from = start.current;
+      const touch = event.changedTouches[0];
+      start.current = null;
+      if (!from || !touch) return;
+      const dx = touch.clientX - from.x;
+      const dy = touch.clientY - from.y;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      go(dx < 0 ? 1 : -1);
+    },
+    [go],
+  );
+
+  return enabled ? { onTouchStart, onTouchEnd } : {};
 }
 
 /* true once the page has finished loading (and the browser has a

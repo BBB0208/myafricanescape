@@ -184,6 +184,7 @@ export const LAYOUT_QUERY = defineQuery(`{
       "height": asset->metadata.dimensions.height
     },
     headerCta ${BUTTON},
+    social{ facebook, youtube, instagram },
     "conciergeEnabled": coalesce(concierge.enabled, false),
     navigation[]{
       _key,

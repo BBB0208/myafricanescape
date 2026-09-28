@@ -7,7 +7,7 @@ import { VisualEditing } from "next-sanity/visual-editing";
 import CurrencyProvider from "@/components/currency/CurrencyProvider";
 import DraftModeToast from "@/components/DraftModeToast";
 import JsonLd from "@/components/JsonLd";
-import type { LogoData } from "@/components/Logo";
+import { BRAND_LOGO, type LogoData } from "@/components/Logo";
 import { MayProvider } from "@/components/May";
 import { SceneDefs } from "@/components/Scene";
 import SiteFooter from "@/components/SiteFooter";
@@ -85,6 +85,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
     cta: page.headerCta,
   }));
 
+  // an upload in Site settings replaces the logo that ships with the site
   const logo: LogoData = settings?.logo?.url
     ? {
         url: stegaClean(settings.logo.url),
@@ -92,7 +93,8 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
         height: settings.logo.height ?? 200,
         alt: settings.logo.alt,
       }
-    : null;
+    : BRAND_LOGO;
+  const logoUrl = logo?.url ? new URL(logo.url, siteUrl).toString() : undefined;
 
   // "Camps Bay, Cape Town" → "Cape Town", once each, for the footer reel
   const cities = [
@@ -104,6 +106,12 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
     ),
   ];
 
+  // only the profiles an editor has actually set count as ours
+  const socialProfiles = Object.values(settings?.social ?? {}).flatMap((url) => {
+    const clean = stegaClean(url)?.trim();
+    return clean ? [clean] : [];
+  });
+
   // who we are, for search engines
   const contact = (settings?.footer?.contactLines ?? []).map((line) => stegaClean(line));
   const organization = {
@@ -114,12 +122,13 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
         "@id": `${siteUrl}/#organization`,
         name: settings?.title,
         url: siteUrl,
-        logo: logo?.url ?? `${siteUrl}/icon.svg`,
-        image: logo?.url ?? `${siteUrl}/icon.svg`,
+        logo: logoUrl,
+        image: logoUrl,
         description: settings?.seo?.description ?? undefined,
         email: contact.find((line) => line.includes("@")),
         telephone: contact.find((line) => /^\+?[\d\s().-]{7,}$/.test(line)),
         areaServed: settings?.footer?.regions ?? undefined,
+        sameAs: socialProfiles.length ? socialProfiles : undefined,
       },
       {
         "@type": "WebSite",
@@ -164,6 +173,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
             nav={nav}
             pages={pages}
             cta={settings?.headerCta}
+            social={settings?.social}
           />
           <main id="main">{children}</main>
           <SiteFooter
@@ -175,6 +185,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
             footer={settings?.footer}
             nav={nav}
             notes={pages}
+            social={settings?.social}
           />
         </MayProvider>
       </CurrencyProvider>

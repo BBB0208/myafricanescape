@@ -6,13 +6,16 @@ import Reveal from "@/components/Reveal";
 import { cn } from "@/lib/cn";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { ICON_STROKE } from "@/lib/icons";
-import { useAfterLoad, useFrameWindow } from "@/components/useFrameWindow";
+import { useAfterLoad, useFrameWindow, useSwipe } from "@/components/useFrameWindow";
 
 const ARROW =
-  "inline-flex items-center justify-center border-0 bg-transparent px-3.5 py-[9px] text-pill transition-colors hover:bg-ink/15 focus-visible:bg-ink/15 focus-visible:outline-none";
+  "inline-flex items-center justify-center border-0 bg-transparent px-3.5 py-[9px] text-pill transition-colors hover:bg-ink/15 focus-visible:bg-ink/15 focus-visible:outline-none " +
+  // a listing with a single photo keeps the pill, at rest
+  "disabled:cursor-default disabled:text-pill/55 disabled:hover:bg-transparent";
 
 /* The listing's frames, in the same film language as the cards — sprocket
-   holes, one frame at a time, the << >> pill to page through them. */
+   holes, one frame at a time, the << >> pill (or a swipe) to page
+   through them. */
 export default function PropertyGallery({
   frames,
   label,
@@ -27,6 +30,8 @@ export default function PropertyGallery({
   const go = (step: number) => setIndex((i) => (i + step + count) % count);
   // neighbours only once the page (and its main photo) has loaded
   const mounted = useFrameWindow(index, count, useAfterLoad());
+  const paged = count > 1;
+  const swipe = useSwipe(go, paged);
 
   if (!count) return null;
 
@@ -36,7 +41,7 @@ export default function PropertyGallery({
       className="relative overflow-hidden rounded-[28px] bg-ink px-4 pt-4 pb-5 text-cream"
     >
       <div className="sprockets mb-3" />
-      <div className="r-develop relative aspect-[16/9] overflow-hidden rounded-lg mobile:aspect-[4/3]">
+      <div className="r-develop relative aspect-[16/9] touch-pan-y overflow-hidden rounded-lg mobile:aspect-[4/3]" {...swipe}>
         {frames.map((frame, i) =>
           mounted(i) ? (
             <div
@@ -59,33 +64,33 @@ export default function PropertyGallery({
       </div>
       <div className="sprockets mt-3" />
 
-      {count > 1 ? (
-        <div className="mt-3.5 flex items-center justify-between px-1">
-          <span className="font-eyebrow text-[12px] tracking-[.1em] text-cream/55">
-            {`FRAME ${String(index + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}`}
-          </span>
-          <div className="flex overflow-hidden rounded-full bg-flame shadow-[0_6px_16px_rgba(255,90,31,.35)]">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              aria-label={`Previous image of ${label}`}
-              className={ARROW}
-            >
-              <ChevronsLeft size={18} strokeWidth={ICON_STROKE} aria-hidden />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              aria-label={`Next image of ${label}`}
-              className={ARROW}
-            >
-              <ChevronsRight size={18} strokeWidth={ICON_STROKE} aria-hidden />
-            </button>
-          </div>
+      <div className="mt-3.5 flex items-center justify-between px-1">
+        <span className="font-eyebrow text-[12px] tracking-[.1em] text-cream/55">
+          {`FRAME ${String(index + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}`}
+        </span>
+        <div className="flex overflow-hidden rounded-full bg-flame shadow-[0_6px_16px_rgba(255,90,31,.35)]">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            disabled={!paged}
+            aria-label={`Previous image of ${label}`}
+            className={ARROW}
+          >
+            <ChevronsLeft size={18} strokeWidth={ICON_STROKE} aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            disabled={!paged}
+            aria-label={`Next image of ${label}`}
+            className={ARROW}
+          >
+            <ChevronsRight size={18} strokeWidth={ICON_STROKE} aria-hidden />
+          </button>
         </div>
-      ) : null}
+      </div>
       <span className="sr-only" aria-live="polite">
-        {count > 1 ? `Image ${index + 1} of ${count}` : ""}
+        {paged ? `Image ${index + 1} of ${count}` : ""}
       </span>
     </Reveal>
   );

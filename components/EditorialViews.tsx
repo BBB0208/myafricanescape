@@ -5,6 +5,7 @@ import type { KeyboardEvent, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { ICON_STROKE } from "@/lib/icons";
+import { useSwipe } from "@/components/useFrameWindow";
 
 /* ============================================================
    An editorial section whose labels change the picture beside it,
@@ -72,10 +73,13 @@ export function ViewsProvider({ labels, children }: { labels: string[]; children
 const ARROW =
   "inline-flex items-center justify-center border-0 bg-transparent px-3 py-[7px] text-pill transition-colors hover:bg-ink/20 focus-visible:bg-ink/20 focus-visible:outline-none " +
   // a roomier target for thumbs
-  "mobile:px-3.5 mobile:py-[11px]";
+  "mobile:px-3.5 mobile:py-[11px] " +
+  // a label with a single picture keeps the pill, at rest
+  "disabled:cursor-default disabled:text-pill/55 disabled:hover:bg-transparent";
 
 /* The picture. Every frame is rendered by the server; selecting one
-   only changes which is opaque. */
+   only changes which is opaque. The << >> pill is always there, like on
+   the listing cards; a swipe on the picture pages through it too. */
 export function ViewArt({ groups }: { groups: ReactNode[][] }) {
   const { index: view, panelId, tabId, labels } = useViews();
   const [frame, setFrame] = useState(0);
@@ -92,6 +96,8 @@ export function ViewArt({ groups }: { groups: ReactNode[][] }) {
   const at = Math.min(frame, Math.max(0, count - 1));
   const go = (step: number) => setFrame((f) => (f + step + count) % count);
   const label = labels[view] ?? "this selection";
+  const paged = count > 1;
+  const swipe = useSwipe(go, paged);
 
   /* each label's first picture is always there, so switching label is
      instant; within a label, only the picture on show, its neighbours
@@ -109,7 +115,8 @@ export function ViewArt({ groups }: { groups: ReactNode[][] }) {
       id={panelId}
       role="tabpanel"
       aria-labelledby={tabId(view)}
-      className="r-curtain relative aspect-[5/4] overflow-hidden rounded-[28px]"
+      className="r-curtain relative aspect-[5/4] touch-pan-y overflow-hidden rounded-[28px]"
+      {...swipe}
     >
       {groups.map((frames, v) =>
         frames.map((node, f) =>
@@ -128,36 +135,36 @@ export function ViewArt({ groups }: { groups: ReactNode[][] }) {
         ),
       )}
 
-      {count > 1 ? (
-        <>
-          <span className="pointer-events-none absolute bottom-5 left-5 z-[2] font-eyebrow text-[12px] tracking-[.1em] text-cream [text-shadow:0_1px_6px_rgba(36,22,8,.75)]">
-            {`${String(at + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}`}
-          </span>
-          <div className="absolute right-5 bottom-4 z-[2] flex overflow-hidden rounded-full bg-flame shadow-[0_6px_16px_rgba(255,90,31,.35)]">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              aria-label={`Previous picture of ${label}`}
-              aria-controls={panelId}
-              className={ARROW}
-            >
-              <ChevronsLeft size={16} strokeWidth={ICON_STROKE} aria-hidden />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              aria-label={`Next picture of ${label}`}
-              aria-controls={panelId}
-              className={ARROW}
-            >
-              <ChevronsRight size={16} strokeWidth={ICON_STROKE} aria-hidden />
-            </button>
-          </div>
-        </>
+      {paged ? (
+        <span className="pointer-events-none absolute bottom-5 left-5 z-[2] font-eyebrow text-[12px] tracking-[.1em] text-cream [text-shadow:0_1px_6px_rgba(36,22,8,.75)]">
+          {`${String(at + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}`}
+        </span>
       ) : null}
+      <div className="absolute right-5 bottom-4 z-[2] flex overflow-hidden rounded-full bg-flame shadow-[0_6px_16px_rgba(255,90,31,.35)]">
+        <button
+          type="button"
+          onClick={() => go(-1)}
+          disabled={!paged}
+          aria-label={`Previous picture of ${label}`}
+          aria-controls={panelId}
+          className={ARROW}
+        >
+          <ChevronsLeft size={16} strokeWidth={ICON_STROKE} aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={() => go(1)}
+          disabled={!paged}
+          aria-label={`Next picture of ${label}`}
+          aria-controls={panelId}
+          className={ARROW}
+        >
+          <ChevronsRight size={16} strokeWidth={ICON_STROKE} aria-hidden />
+        </button>
+      </div>
 
       <span className="sr-only" aria-live="polite">
-        {count > 1 ? `${label}, picture ${at + 1} of ${count}` : ""}
+        {paged ? `${label}, picture ${at + 1} of ${count}` : ""}
       </span>
     </div>
   );

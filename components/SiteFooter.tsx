@@ -4,6 +4,7 @@ import Container from "@/components/Container";
 import FooterNote, { type PageNote } from "@/components/FooterNote";
 import Logo, { type LogoData } from "@/components/Logo";
 import type { NavItem } from "@/components/SiteHeader";
+import SocialLinks, { type SocialData } from "@/components/SocialLinks";
 import { pillStyle } from "@/lib/nav";
 import { ArrowUp, Mail, MapPin, Phone } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -58,6 +59,7 @@ export default function SiteFooter({
   footer,
   nav,
   notes,
+  social,
 }: {
   logo: LogoData;
   line1?: string | null;
@@ -68,6 +70,7 @@ export default function SiteFooter({
   footer: FooterData;
   nav: NavItem[];
   notes: PageNote[];
+  social: SocialData;
 }) {
   // repeat short lists so one copy of the strip always spans the screen
   const reel = cities.length && cities.length < 6 ? [...cities, ...cities, ...cities] : cities;
@@ -107,12 +110,17 @@ export default function SiteFooter({
       <Container className="pt-20 pb-12">
         <div className="grid grid-cols-[1.4fr_1fr_1fr_1fr] gap-10 tablet:grid-cols-2 mobile:grid-cols-1">
           <div>
-            <Link href="/" className="inline-flex h-[76px] items-center text-[34px]">
+            <Link
+              href="/"
+              aria-label="My African Escape — home"
+              className="inline-flex w-[260px] items-center text-[34px] mobile:w-[220px]"
+            >
               <Logo logo={logo} line1={line1} line2={line2} />
             </Link>
             {footer?.blurb ? (
-              <p className="mt-4 max-w-[34ch] text-[14.5px] text-cream/60">{footer.blurb}</p>
+              <p className="mt-5 max-w-[34ch] text-[14.5px] text-cream/60">{footer.blurb}</p>
             ) : null}
+            <SocialLinks social={social} tone="cream" className="mt-5 -ml-2" />
             <a
               href="#top"
               className="group/top mt-8 inline-flex items-center gap-3 font-pill text-[13px] uppercase tracking-[.14em] text-cream/65 transition-colors duration-300 hover:text-gold"

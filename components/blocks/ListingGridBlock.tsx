@@ -100,8 +100,8 @@ export default async function ListingGridBlock({ block }: { block: BlockOf<"list
                   blur={j === 0}
                 />
               ));
-              // leave room for the << >> pill beside the price
-              const roomForArrows = frames.length > 1 && "pr-[104px]";
+              // leave room for the << >> pill beside the price — every card has one
+              const roomForArrows = "pr-[104px]";
               const tags = [p.type, typeof p.beds === "number" ? `${p.beds} bed` : null, p.tag].filter(Boolean);
               const href = propertyHref(clean.slug);
               const updated = updatedLabel(p._updatedAt);

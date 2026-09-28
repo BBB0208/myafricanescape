@@ -9,6 +9,7 @@ export const siteSettings = defineType({
   icon: CogIcon,
   groups: [
     { name: "general", title: "General", default: true },
+    { name: "social", title: "Social media" },
     { name: "navigation", title: "Navigation" },
     { name: "footer", title: "Footer" },
     { name: "concierge", title: "May concierge" },
@@ -38,7 +39,7 @@ export const siteSettings = defineType({
       type: "image",
       group: "general",
       description:
-        "Shown in the header and footer. A transparent PNG or SVG works best. Until one is uploaded, the text wordmark below is used.",
+        "Shown in the header and footer. Leave empty to use the My African Escape logo built into the site; upload one here only to replace it. A wide, transparent PNG or SVG works best.",
       fields: [
         defineField({ name: "alt", title: "Alternative text", type: "string" }),
       ],
@@ -48,6 +49,7 @@ export const siteSettings = defineType({
       title: "Text wordmark — first line",
       type: "string",
       group: "general",
+      description: "Read out by screen readers as the logo's name.",
       initialValue: "My African",
     }),
     defineField({
@@ -56,6 +58,40 @@ export const siteSettings = defineType({
       type: "string",
       group: "general",
       initialValue: "Escape",
+    }),
+
+    /* ---------- social ---------- */
+    defineField({
+      name: "social",
+      title: "Social media",
+      type: "object",
+      group: "social",
+      description:
+        "The icons at the top right of every page and in the footer. Paste each profile's full address. A platform left empty still shows its icon, linking to that platform's home page, until its address is added.",
+      options: { collapsible: false },
+      fields: [
+        defineField({
+          name: "facebook",
+          title: "Facebook",
+          type: "url",
+          description: "e.g. https://www.facebook.com/myafricanescape",
+          validation: (rule) => rule.uri({ scheme: ["https"] }),
+        }),
+        defineField({
+          name: "youtube",
+          title: "YouTube",
+          type: "url",
+          description: "e.g. https://www.youtube.com/@MyAfricanEscape-SA",
+          validation: (rule) => rule.uri({ scheme: ["https"] }),
+        }),
+        defineField({
+          name: "instagram",
+          title: "Instagram",
+          type: "url",
+          description: "e.g. https://www.instagram.com/myafricanescape",
+          validation: (rule) => rule.uri({ scheme: ["https"] }),
+        }),
+      ],
     }),
 
     /* ---------- navigation ---------- */
